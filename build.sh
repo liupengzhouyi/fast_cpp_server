@@ -73,6 +73,15 @@ else
   echo "📁 Failed to create scripts directory. ❌"
 fi
 
+# 创建scripts目录
+if [ -d "docs" ]; then
+  echo "📁 Directory 'docs' already exists. ✅"
+elif mkdir docs; then
+  echo "📁 Successfully created docs directory. ✅"
+else
+  echo "📁 Failed to create docs directory. ❌"
+fi
+
 # 创建CMakeLists.txt文件
 if [ -f "CMakeLists.txt" ]; then
   echo "📄 File 'CMakeLists.txt' already exists. ✅"
@@ -101,6 +110,24 @@ else
 fi
 
 
+# 下载jsoncpp
+if [ -d "external/jsoncpp" ]; then
+  echo "⬇️ Directory 'external/jsoncpp' already exists. ✅"
+elif git clone https://github.com/open-source-parsers/jsoncpp.git external/jsoncpp; then
+  echo "⬇️ Successfully downloaded JSONCPP. ✅"
+else
+  echo "⬇️ Failed to download JSONCPP. ❌"
+fi
+
+# 下载nlohmann/json
+if [ -d "external/json" ]; then
+  echo "⬇️ Directory 'external/json' already exists. ✅"
+elif git clone https://github.com/nlohmann/json.git external/json; then
+  echo "⬇️ Successfully downloaded nlohmann/json. ✅"
+else
+  echo "⬇️ Failed to download nlohmann/json. ❌"
+fi
+
 # create main.cpp
 if [ -f "src/main.cpp" ]; then
   echo "📄 File 'src/main.cpp' already exists. ✅"
@@ -126,4 +153,13 @@ elif touch scripts/build_spdlog_lib.sh; then
   echo "📄 Successfully created build_spdlog_lib.sh file. ✅"
 else
   echo "📄 Failed to create build_spdlog_lib.sh file. ❌"
+fi
+
+# create clear_build_dir.sh
+if [ -f "scripts/clear_build_dir.sh" ]; then
+  echo "📄 File 'scripts/clear_build_dir.sh' already exists. ✅"
+elif touch scripts/clear_build_dir.sh; then
+  echo "📄 Successfully created clear_build_dir.sh file. ✅"
+else
+  echo "📄 Failed to create clear_build_dir.sh file. ❌"
 fi
