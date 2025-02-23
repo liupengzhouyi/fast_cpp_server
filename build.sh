@@ -128,6 +128,15 @@ else
   echo "⬇️ Failed to download nlohmann/json. ❌"
 fi
 
+# 下载nlohmann/cpr
+if [ -d "external/cpr" ]; then
+  echo "⬇️ Directory 'external/cpr' already exists. ✅"
+elif git clone https://github.com/libcpr/cpr.git external/cpr; then
+  echo "⬇️ Successfully downloaded libcpr/cpr. ✅"
+else
+  echo "⬇️ Failed to download libcpr/cpr. ❌"
+fi
+
 # create main.cpp
 if [ -f "src/main.cpp" ]; then
   echo "📄 File 'src/main.cpp' already exists. ✅"
