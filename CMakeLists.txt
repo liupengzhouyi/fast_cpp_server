@@ -34,6 +34,9 @@ add_subdirectory(external/json)
 # 添加google test库
 add_subdirectory(external/googletest)
 
+# 添加cpr库
+add_subdirectory(external/cpr)
+
 # 查找所有源文件
 file(GLOB_RECURSE SOURCES "src/*.cpp" "util/*.cpp")
 # 从源文件列表中移除 main.cpp
@@ -46,6 +49,8 @@ add_executable(FastCppServer src/main.cpp ${SOURCES})
 target_link_libraries(FastCppServer PRIVATE spdlog::spdlog)
 
 target_link_libraries(FastCppServer PRIVATE nlohmann_json::nlohmann_json)
+
+target_link_libraries(FastCppServer PRIVATE cpr::cpr)
 
 
 # -------------------------------- Unit test ------------------------------

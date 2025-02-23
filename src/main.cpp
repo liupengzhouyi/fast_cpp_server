@@ -5,6 +5,7 @@
 
 #include <spdlog/spdlog.h>
 #include <nlohmann/json.hpp>
+#include <cpr/cpr.h>
 
 #include "system_healthy.h"
 
@@ -36,6 +37,22 @@ int main() {
     auto report = systemHealthy.getHealthReport();
     for (const auto& [key, value] : report) {
         std::cout << key << ": " << value << std::endl;
+    }
+
+    
+
+    cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/users/octocat"});
+
+    // 检查请求是否成功
+    if (r.status_code == 200) {
+        // 输出响应内容
+        std::cout << "Request successful!" << std::endl;
+        std::cout << "Status code: " << r.status_code << std::endl;
+        std::cout << "Response body: " << r.text << std::endl;
+    } else {
+        // 输出错误信息
+        std::cout << "Request failed with status code: " << r.status_code << std::endl;
+        std::cout << "Error message: " << r.error.message << std::endl;
     }
 
 
