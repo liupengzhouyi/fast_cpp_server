@@ -20,12 +20,12 @@ else
 fi
 
 # 创建include目录
-if [ -d "include" ]; then
-  echo "📁 Directory 'include' already exists. ✅"
-elif mkdir include; then
-  echo "📁 Successfully created include directory. ✅"
+if [ -d "src/include" ]; then
+  echo "📁 Directory 'src/include' already exists. ✅"
+elif mkdir src/include; then
+  echo "📁 Successfully created src/include directory. ✅"
 else
-  echo "📁 Failed to create include directory. ❌"
+  echo "📁 Failed to create src/include directory. ❌"
 fi
 
 # 创建src目录
@@ -47,21 +47,21 @@ else
 fi
 
 # 创建tools目录
-if [ -d "tools" ]; then
-  echo "📁 Directory 'tools' already exists. ✅"
-elif mkdir tools; then
-  echo "📁 Successfully created tools directory. ✅"
+if [ -d "src/tools" ]; then
+  echo "📁 Directory 'src/tools' already exists. ✅"
+elif mkdir src/tools; then
+  echo "📁 Successfully created src/tools directory. ✅"
 else
-  echo "📁 Failed to create tools directory. ❌"
+  echo "📁 Failed to create src/tools directory. ❌"
 fi
 
 # 创建util目录
-if [ -d "util" ]; then
-  echo "📁 Directory 'util' already exists. ✅"
-elif mkdir util; then
-  echo "📁 Successfully created util directory. ✅"
+if [ -d "src/util" ]; then
+  echo "📁 Directory 'src/util' already exists. ✅"
+elif mkdir src/util; then
+  echo "📁 Successfully created src/util directory. ✅"
 else
-  echo "📁 Failed to create util directory. ❌"
+  echo "📁 Failed to create src/util directory. ❌"
 fi
 
 # 创建scripts目录
@@ -103,7 +103,7 @@ fi
 # 下载Google Test
 if [ -d "external/googletest" ]; then
   echo "⬇️ Directory 'external/googletest' already exists. ✅"
-elif git clone https://github.com/google/googletest.git external/googletest; then
+elif git clone --recurse-submodules https://github.com/google/googletest.git external/googletest; then
   echo "⬇️ Successfully downloaded Google Test. ✅"
 else
   echo "⬇️ Failed to download Google Test. ❌"
@@ -135,6 +135,41 @@ elif git clone https://github.com/libcpr/cpr.git external/cpr; then
   echo "⬇️ Successfully downloaded libcpr/cpr. ✅"
 else
   echo "⬇️ Failed to download libcpr/cpr. ❌"
+fi
+
+# 下载mosquitto
+if [ -d "external/mosquitto" ]; then
+  echo "⬇️ Directory 'external/mosquitto' already exists. ✅"
+elif git clone --branch v2.0.18 https://github.com/eclipse/mosquitto.git external/mosquitto; then
+  echo "⬇️ Successfully downloaded mosquitto. ✅"
+  cd external/mosquitto
+  git submodule update --init --recursive
+  cd -
+else
+  echo "⬇️ Failed to download mosquitto. ❌"
+fi
+
+# # 下载simpleini
+# if [ -d "external/simpleini" ]; then
+#   echo "⬇️ Directory 'external/simpleini' already exists. ✅"
+# elif git clone https://github.com/brofield/simpleini.git external/simpleini; then
+#   echo "Run simpleini code init over. ✅"
+# else
+#   echo "⬇️ Failed to download simpleini. ❌"
+# fi
+
+# 下载putobuf
+if [ -d "external/protobuf" ]; then
+  echo "⬇️ Directory 'external/protobuf' already exists. ✅"
+elif git clone --branch 21.x https://github.com/protocolbuffers/protobuf.git external/protobuf; then
+  echo "⬇️ Successfully downloaded protobuf. ✅"
+  echo "Run protobuf code init."
+  cd external/protobuf
+  git submodule update --init --recursive
+  cd -
+  echo "Run protobuf code init over. ✅"
+else
+  echo "⬇️ Failed to download protobuf. ❌"
 fi
 
 # create main.cpp
@@ -171,4 +206,31 @@ elif touch scripts/clear_build_dir.sh; then
   echo "📄 Successfully created clear_build_dir.sh file. ✅"
 else
   echo "📄 Failed to create clear_build_dir.sh file. ❌"
+fi
+
+
+# 创建proto目录
+if [ -d "src/proto" ]; then
+  echo "📁 Directory 'proto' already exists. ✅"
+elif mkdir src/proto; then
+  echo "📁 Successfully created proto directory. ✅"
+  TEST_PROTO_FILE="src/proto/test.proto"
+  touch $TEST_PROTO_FILE
+  echo 'syntax = "proto3";' > $TEST_PROTO_FILE
+  echo '' >> $TEST_PROTO_FILE
+  echo 'message Person {' >> $TEST_PROTO_FILE
+  echo '  string name = 1;' >> $TEST_PROTO_FILE
+  echo '  int32 id = 2;' >> $TEST_PROTO_FILE
+  echo '}' >> $TEST_PROTO_FILE
+else
+  echo "📁 Failed to create proto directory. ❌"
+fi
+
+# 创建 protobuf 目录
+if [ -d "src/protobuf" ]; then
+  echo "📁 Directory 'protobuf' already exists. ✅"
+elif mkdir src/protobuf; then
+  echo "📁 Successfully created protobuf directory. ✅"
+else
+  echo "📁 Failed to create protobuf directory. ❌"
 fi

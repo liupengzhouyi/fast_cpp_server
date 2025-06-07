@@ -1,0 +1,26 @@
+[Unit]
+# 描述服务的基本信息
+Description=fast_cpp_server Service                             # 服务的描述信息
+After=network.target                                            # 服务启动的依赖项，表示在网络服务启动后再启动此服务
+
+[Service]
+# 服务的类型，simple 表示服务会一直运行，ExecStart 启动的进程是主进程
+Type=simple
+
+# 服务启动时执行的命令
+ExecStart=/usr/local/bin/fast_cpp_server
+# 服务停止时执行的命令
+# ExecStop=/home/cs/DockerRoot/fast_cpp_server/start.sh stop    # 停止脚本路径
+
+# 服务崩溃或退出时自动重启
+Restart=always
+
+# 设置环境变量，例如动态库路径
+Environment=LD_LIBRARY_PATH=/usr/local/lib/fast_cpp_server:$LD_LIBRARY_PATH
+
+# 设置服务的工作目录
+WorkingDirectory=/tmp/fast_cpp_server
+
+[Install]
+# 指定服务的目标，multi-user.target 表示服务将在多用户模式下启动
+WantedBy=multi-user.target

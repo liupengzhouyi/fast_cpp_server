@@ -1,0 +1,15 @@
+{
+    "config_file": "/opt/config/config.json",
+    "mqtt_config": {
+        "links": [
+            {
+                "ip": "127.0.0.1",
+                "port": 1883
+            }
+        ]
+    },
+    "log_config": {
+        "log_level": "",
+        "log_file_path": ""
+    }
+}
