@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <unistd.h> // for sleep function
 
 #include <spdlog/spdlog.h>
 #include <nlohmann/json.hpp>
@@ -55,6 +56,13 @@ int main() {
         std::cout << "Error message: " << r.error.message << std::endl;
     }
 
+
+    while (true)
+    {
+        /* code */
+        sleep(10);
+    }
+    
 
     return 0;
 }

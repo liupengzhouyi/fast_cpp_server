@@ -1,7 +1,6 @@
 #  使用官方的 Ubuntu 作为基础镜像
 FROM ubuntu:24.04
 
-
 # 设置时区为 UTC，避免时区警告
 # ENV TZ=UTC
 ENV TZ=Asia/Shanghai
@@ -24,6 +23,8 @@ RUN apt-get update && apt-get upgrade -y && \
     graphviz-dev \
     python3.12 \
     python3-pip \
+    libssl-dev \
+    libcurl4-openssl-dev \
     && apt-get clean
 
 # # 安装 Python 包 pygraphviz

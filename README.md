@@ -7,7 +7,9 @@ A template of cpp server.
 
 * code coverage
 * code doc genarte tools
-* 
+
+
+## 
 
 ## docker dev
 
@@ -26,3 +28,10 @@ docker run -it --name my_container_name -p 8004:4444 -p 8005:5555 -v /code:/work
 ![file_tree](./images/file_tree.png)
 
 ![file_tree](./images/class_info.png)
+
+## FQA
+
+* if MQTT con't start, run:
+```shell
+export LD_LIBRARY_PATH=/workspace/build/external/mosquitto/lib:$LD_LIBRARY_PATH
+```

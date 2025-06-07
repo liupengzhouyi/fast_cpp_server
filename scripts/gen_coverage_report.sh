@@ -19,7 +19,7 @@ if [ -d "$BUILD_DIR" ]; then
   read user_input
     if [[ $user_input =~ ^[Yy]$ ]]; then
     # REBUILD
-    cd $BUILD_DIR && cmake .. && make && ctest && make coverage
+    cd $BUILD_DIR && cmake .. && make -j && ctest && make coverage
     echo "🧹 Over✅"
     else
     cd $BUILD_DIR && ctest && make coverage
