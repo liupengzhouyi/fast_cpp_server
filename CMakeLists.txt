@@ -30,6 +30,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/src/tools/simple_tcp_client
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_buffer
     ${PROJECT_SOURCE_DIR}/external/spdlog/include
+    ${PROJECT_SOURCE_DIR}/external/libzmq/include
 )
 
 # 设置静态库和可执行文件的输出目录
@@ -92,6 +93,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE cpr::cpr)
 # 可执行文件链接到thread库
 target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE libzmq)
+
 # -------------------------------- Unit test ------------------------------
 set(TEST_PROGRAM_NAME ${PROJECT_NAME}_Test)
 # find all test source files
@@ -107,7 +110,11 @@ target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE gtest gtest_main)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE spdlog::spdlog)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE cpr::cpr)
+# target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE zmq::zmq)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE libzmq)
+
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE pthread)
+
 
 # start test
 enable_testing()

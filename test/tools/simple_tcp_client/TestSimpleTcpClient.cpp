@@ -19,7 +19,7 @@ TEST(ExampleTest, TestLinkA) {
 
     while (true)
     {
-        sleep(15);
+        sleep(10);
         if (simpleTcpClient.readData(outData)) {
             for (auto c : outData) {
                 std::cout << c;
@@ -41,7 +41,7 @@ TEST(ExampleTest, TestLinkB) {
 
     while (true)
     {
-        sleep(15);
+        sleep(10);
         if (simpleTcpClient.readData(outData)) {
             for (auto c : outData) {
                 std::cout << c;
