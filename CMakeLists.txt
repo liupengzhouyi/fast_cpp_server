@@ -24,7 +24,13 @@ endif()
 
 # 包含头文件目录
 set(INCLUDE_DIRECTORIES ${PROJECT_SOURCE_DIR}/src/include)
-include_directories(${INCLUDE_DIRECTORIES})
+
+include_directories(
+    ${INCLUDE_DIRECTORIES}
+    ${PROJECT_SOURCE_DIR}/src/tools/simple_tcp_client
+    ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_buffer
+    ${PROJECT_SOURCE_DIR}/external/spdlog/include
+)
 
 # 设置静态库和可执行文件的输出目录
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) # 静态库 (.a)
@@ -58,8 +64,18 @@ add_subdirectory(external/protobuf)
 set(DOCUMENTATION OFF CACHE BOOL "Disable documentation generation")
 add_subdirectory(external/mosquitto)
 
+add_subdirectory(external/libzmq)
+
 # 查找所有源文件
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/util/*.cpp" "src/tools/*.cpp")
+file(
+    GLOB_RECURSE
+    SOURCES
+    "src/*.cpp"
+    "src/util/*.cpp"
+    "src/tools/simple_tcp_client/*.cpp"
+    "src/tools/thread_safe_buffer/*.cpp"
+)
+
 # 从源文件列表中移除 main.cpp
 list(REMOVE_ITEM SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp)
 
@@ -73,6 +89,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE cpr::cpr)
 
+# 可执行文件链接到thread库
+target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
 
 # -------------------------------- Unit test ------------------------------
 set(TEST_PROGRAM_NAME ${PROJECT_NAME}_Test)
@@ -86,6 +104,10 @@ add_subdirectory(external/googletest)
 add_executable(${TEST_PROGRAM_NAME} ${TEST_SOURCES} ${SOURCES})
 target_include_directories(${TEST_PROGRAM_NAME} PRIVATE ${INCLUDE_DIRECTORIES})
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE gtest gtest_main)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE spdlog::spdlog)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE cpr::cpr)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE pthread)
 
 # start test
 enable_testing()
@@ -117,7 +139,12 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PROJECT_NAME})
 set(SCRIPT_DIRECTORIES ${PROJECT_SOURCE_DIR}/scripts)
 
 # 包含必要的文件
-install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/ DESTINATION bin)
+# 把 bin 下的所有文件都装到最终包里
+# install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/ DESTINATION bin)
+# 不再批量拷贝 bin 目录，而是只安装你真正需要的可执行程序
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+# 如果你的单元测试可执行文件也想打包
+install(TARGETS ${TEST_PROGRAM_NAME} RUNTIME DESTINATION bin)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/ DESTINATION lib)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/config/ DESTINATION config)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/service/ DESTINATION service)
