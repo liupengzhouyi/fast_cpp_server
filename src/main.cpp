@@ -10,6 +10,11 @@
 
 #include "system_healthy.h"
 
+#include "SimpleTcpClient.h"
+#include "ThreadSafeBuffer.h"
+
+using namespace tools;
+
 using json = nlohmann::json;
 
 int main() {
@@ -56,11 +61,28 @@ int main() {
         std::cout << "Error message: " << r.error.message << std::endl;
     }
 
+    std::string ip = "192.168.1.230";
+    int port = 3000;
+
+    // std::string ip = "192.168.1.166";
+    // int port = 5000;
+
+    int maxTimeoutMs = 3000;
+    SimpleTcpClient simpleTcpClient = SimpleTcpClient(ip, port, maxTimeoutMs);
+    std::vector<char> outData = {};
 
     while (true)
     {
         /* code */
         sleep(10);
+        // if (simpleTcpClient.readData(outData)) {
+        //     for (auto c : outData) {
+        //         std::cout << c;
+        //     }
+        //     std::cout << std::endl;
+        // } else {
+        //     std::cout << "--- ERROR for get data" << std::endl;
+        // }
     }
     
 
