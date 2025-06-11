@@ -149,6 +149,18 @@ else
   echo "⬇️ Failed to download mosquitto. ❌"
 fi
 
+# 下载libzmq
+if [ -d "external/libzmq" ]; then
+  echo "⬇️ Directory 'external/libzmq' already exists. ✅"
+elif git clone https://github.com/zeromq/libzmq.git external/libzmq; then
+  echo "⬇️ Successfully downloaded libzmq. ✅"
+  # cd external/libzmq
+  # git submodule update --init --recursive
+  # cd -
+else
+  echo "⬇️ Failed to download libzmq. ❌"
+fi
+
 # # 下载simpleini
 # if [ -d "external/simpleini" ]; then
 #   echo "⬇️ Directory 'external/simpleini' already exists. ✅"
