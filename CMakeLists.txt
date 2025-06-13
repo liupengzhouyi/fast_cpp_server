@@ -29,6 +29,7 @@ include_directories(
     ${INCLUDE_DIRECTORIES}
     ${PROJECT_SOURCE_DIR}/src/tools/simple_tcp_client
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_buffer
+    ${PROJECT_SOURCE_DIR}/src/tools/ping_tools
     ${PROJECT_SOURCE_DIR}/external/spdlog/include
     ${PROJECT_SOURCE_DIR}/external/libzmq/include
 )
@@ -75,6 +76,7 @@ file(
     "src/util/*.cpp"
     "src/tools/simple_tcp_client/*.cpp"
     "src/tools/thread_safe_buffer/*.cpp"
+    "src/tools/ping_tools/*.cpp"
 )
 
 # 从源文件列表中移除 main.cpp
