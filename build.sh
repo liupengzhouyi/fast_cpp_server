@@ -100,6 +100,15 @@ else
   echo "⬇️ Failed to download spdlog. ❌"
 fi
 
+# 下载easyloggingpp
+if [ -d "external/easyloggingpp" ]; then
+  echo "⬇️ Directory 'external/easyloggingpp' already exists. ✅"
+elif git clone https://github.com/amrayn/easyloggingpp.git external/easyloggingpp; then
+  echo "⬇️ Successfully downloaded easyloggingpp. ✅"
+else
+  echo "⬇️ Failed to download easyloggingpp. ❌"
+fi
+
 # 下载Google Test
 if [ -d "external/googletest" ]; then
   echo "⬇️ Directory 'external/googletest' already exists. ✅"

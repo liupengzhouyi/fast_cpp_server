@@ -13,8 +13,11 @@
 #include <unistd.h>
 #endif
 
+#include "MyLog.h"
+
+
 SystemHealthy::SystemHealthy() {
-    // 初始化健康状态报告
+    MyLog::Info("初始化健康状态报告");
     healthReport["CPU Usage"] = "Unknown";
     healthReport["Memory Usage"] = "Unknown";
     healthReport["Disk Usage"] = "Unknown";

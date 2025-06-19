@@ -9,6 +9,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include "MyLog.h"
+
 
 namespace tools {
 /**
@@ -56,6 +58,7 @@ void SimpleTcpClient::monitorConnection() {
             spdlog::warn("Not connected, try to connect...");
             if (connectToServer()) {
                 spdlog::info("Connected to server {}:{}", ip_, port_);
+                MYLOG_INFO("Connected to server {}:{}", ip_, port_);
                 connected_ = true;
             } else {
                 spdlog::error("Connect failed, retry in 1s...");
@@ -91,8 +94,7 @@ bool SimpleTcpClient::connectToServer() {
     setsockopt(sockfd_, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 
     if (connect(sockfd_, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) < 0) {
-        spdlog::error("Connect \
-            : {}", strerror(errno));
+        spdlog::error("Connect : {}", strerror(errno));
         close(sockfd_);
         return false;
     }
@@ -114,6 +116,7 @@ void SimpleTcpClient::receiveLoop() {
             if (bytesRead > 0) {
                 // 处理数据
                 spdlog::info("Received {} bytes", bytesRead);
+                MYLOG_INFO("Received {} bytes", bytesRead);
                 std::vector<char> data(buffer.begin(), buffer.begin() + bytesRead);
                 buffer_.push(data);
             } else if (bytesRead == 0) {
