@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package SystemHealthy;
+
+// 单个 CPU 核心的信息
+message CPUCoreInfo {
+  int32 core_id                     = 1; // 核心编号
+  float usage_percent               = 2; // 当前核心使用率（百分比）
+}
+
+// 整体 CPU 信息
+message CPUInfo {
+  string architecture               = 1; // CPU 架构，例如 x86_64, armv8
+  int32 core_count                  = 2; // 核心总数
+  repeated CPUCoreInfo cores        = 3; // 每个核心的使用情况
+}
+
+// 内存信息
+message MemInfo {
+  uint64 total_bytes                = 1; // 内存总量（字节）
+  uint64 available_bytes            = 2; // 可用内存（字节）
+  float usage_percent               = 3; // 当前内存使用率（百分比）
+}
+
+// 磁盘 I/O 信息
+message DiskInfo {
+  uint64 read_bytes                 = 1; // 总读取字节数
+  uint64 write_bytes                = 2; // 总写入字节数
+}
+
+// 网络信息
+message NetInfo {
+  uint64 recv_bytes                 = 1; // 接收的总字节数
+  uint64 transmit_bytes             = 2; // 发送的总字节数
+}
+
+
+// GPU 核心信息（如适用）
+message GPUCoreInfo {
+  int32 core_id                     = 1; // GPU 核心编号
+  float usage_percent               = 2; // 当前核心使用率（百分比）
+}
+
+
+// GPU 信息（支持多 GPU）
+message GPUInfo {
+  string vendor                     = 1; // GPU 厂商，如 NVIDIA、Intel、AMD
+  string model                      = 2; // GPU 型号
+  float usage_percent               = 3; // GPU 总体使用率（百分比）
+  uint64 memory_total_bytes         = 4; // GPU 显存总量（字节）
+  uint64 memory_used_bytes          = 5; // 已用显存（字节）
+  repeated GPUCoreInfo cores        = 6; // GPU 核心信息（如可获得）
+}
+
+
+// 单个进程的资源使用情况
+message ProcessInfo {
+  int32 pid                         = 1; // 进程 ID
+  string name                       = 2; // 进程名称
+  float cpu_percent                 = 3; // CPU 使用率
+  float mem_percent                 = 4; // 内存使用率
+}
+
+// 系统整体状态快照
+message SystemInfo {
+  string os_name                    = 1; // 操作系统名称
+  string platform                   = 2; // 平台信息（如 Linux/x86_64）
+  uint64 uptime_seconds             = 3; // 系统运行时间（秒）
+  CPUInfo cpu_info                  = 4; // CPU 信息
+  MemInfo mem_info                  = 5; // 内存信息
+  DiskInfo disk_info                = 6; // 磁盘 IO 信息
+  NetInfo net_info                  = 7; // 网络通信信息
+  repeated GPUInfo gpu_infos        = 8; // 多个 GPU 信息
+  repeated ProcessInfo processes    = 9; // 当前进程列表
+}

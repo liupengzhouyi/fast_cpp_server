@@ -5,8 +5,14 @@
 #include <unistd.h> // for sleep function
 
 #include <spdlog/spdlog.h>
+
+// #include <easylogging++.h>
+// INITIALIZE_EASYLOGGINGPP
+
 #include <nlohmann/json.hpp>
 #include <cpr/cpr.h>
+
+#include "MyLog.h"
 
 #include "system_healthy.h"
 
@@ -19,9 +25,14 @@ using json = nlohmann::json;
 
 int main() {
 
-    spdlog::info("Hello World");
+    MyLog::Init("logs/app.log");  // ✅ 只调用一次
 
-    spdlog::info("Test jsoncpp libary.");
+    MYLOG_INFO("Hello World");
+    MYLOG_DEBUG("This is a debug log");
+    MYLOG_WARN("Warning message");
+    MYLOG_ERROR("Error message");
+
+    MYLOG_INFO("Test jsoncpp libary.");
     json data = json::parse(R"({"key": "value"})");
     std::string value = data["key"];
     data["new_item_01"] = 1;
@@ -44,8 +55,6 @@ int main() {
     for (const auto& [key, value] : report) {
         std::cout << key << ": " << value << std::endl;
     }
-
-    
 
     cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/users/octocat"});
 
