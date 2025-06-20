@@ -149,6 +149,9 @@ add_subdirectory(external/libzmq)
 # 添加 myproto 库
 set(BUILD_MY_PROTO ON CACHE BOOL "Build myproto library")
 add_subdirectory(src/protobuf)
+# 添加 my_arg_parser 库
+set(BUILD_MY_ARG_PARSER ON CACHE BOOL "Build my_arg_parser library")
+add_subdirectory(src/util/my_arg_parser)
 # 添加 mylib 库
 set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage for mylib")
 add_subdirectory(src)
@@ -180,6 +183,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
 target_link_libraries(${PROJECT_NAME} PRIVATE mylog)
 target_link_libraries(${PROJECT_NAME} PRIVATE myconfig)
 target_link_libraries(${PROJECT_NAME} PRIVATE myproto)
+target_link_libraries(${PROJECT_NAME} PRIVATE my_arg_parser)
 target_link_libraries(${PROJECT_NAME} PRIVATE mylib)
 
 add_dependencies(mylog spdlog::spdlog)
@@ -216,6 +220,7 @@ target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE pthread)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE mylog)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE myconfig)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE myproto)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_arg_parser)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE mylib)
 
 option(ENABLE_TEST "Enable unit testing" ON)
