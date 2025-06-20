@@ -5,11 +5,12 @@ list(REMOVE_ITEM SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp)
 
 # 查找所有通用源文件，不包含 main.cpp
 file(GLOB_RECURSE MYLIB_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/tools/simple_tcp_client/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/tools/thread_safe_buffer/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/tools/ping_tools/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/tools/system_healthy/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/tools/example/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/tools/simple_tcp_client/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_buffer/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/tools/ping_tools/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/tools/system_healthy/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/tools/example/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/tools/monitor/device_online_monitor/*.cpp
 )
 
 # 创建静态库 mylib
@@ -21,6 +22,7 @@ set(MYLIB_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/src/tools/ping_tools
     ${PROJECT_SOURCE_DIR}/src/tools/system_healthy
     ${PROJECT_SOURCE_DIR}/src/tools/example
+    ${PROJECT_SOURCE_DIR}/src/tools/monitor/device_online_monitor
 )
 
 # 头文件路径
