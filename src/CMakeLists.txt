@@ -11,6 +11,7 @@ file(GLOB_RECURSE MYLIB_SOURCES
     ${PROJECT_SOURCE_DIR}/src/tools/system_healthy/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/example/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/monitor/device_online_monitor/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_queue/*.cpp
 )
 
 # 创建静态库 mylib
@@ -23,6 +24,7 @@ set(MYLIB_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/src/tools/system_healthy
     ${PROJECT_SOURCE_DIR}/src/tools/example
     ${PROJECT_SOURCE_DIR}/src/tools/monitor/device_online_monitor
+    ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_queue
 )
 
 # 头文件路径
@@ -58,6 +60,8 @@ target_link_libraries(mylib PUBLIC cpr::cpr)
 target_link_libraries(mylib PUBLIC libzmq)
 # pthread
 target_link_libraries(mylib PUBLIC pthread)
+# my_soft_healthy
+target_link_libraries(mylib PRIVATE my_soft_healthy)
 
 print_colored_message("Adding mylib library with sources over" COLOR yellow)
 print_colored_message("------------------------------" COLOR magenta)
