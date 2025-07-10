@@ -152,6 +152,12 @@ add_subdirectory(src/protobuf)
 # 添加 my_arg_parser 库
 set(BUILD_MY_ARG_PARSER ON CACHE BOOL "Build my_arg_parser library")
 add_subdirectory(src/util/my_arg_parser)
+# 添加 my_soft_healthy 库
+set(BUILD_MY_SOFT_HEALTHY ON CACHE BOOL "Build my_soft_healthy library")
+add_subdirectory(src/util/my_soft_healthy)
+# 添加 my_system_healthy 库
+set(BUILD_MY_SYSTEM_HEALTHY ON CACHE BOOL "Build my_system_healthy library")
+add_subdirectory(src/util/my_system_healthy)
 # 添加 mylib 库
 set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage for mylib")
 add_subdirectory(src)
@@ -184,12 +190,14 @@ target_link_libraries(${PROJECT_NAME} PRIVATE mylog)
 target_link_libraries(${PROJECT_NAME} PRIVATE myconfig)
 target_link_libraries(${PROJECT_NAME} PRIVATE myproto)
 target_link_libraries(${PROJECT_NAME} PRIVATE my_arg_parser)
+target_link_libraries(${PROJECT_NAME} PRIVATE my_soft_healthy)
 target_link_libraries(${PROJECT_NAME} PRIVATE mylib)
 
 add_dependencies(mylog spdlog::spdlog)
 add_dependencies(mylib mylog)
 add_dependencies(mylib myconfig)
 add_dependencies(mylib myproto)
+add_dependencies(mylib my_soft_healthy)
 add_dependencies(mylib libzmq)
 add_dependencies(mylib cpr::cpr)
 add_dependencies(mylib nlohmann_json::nlohmann_json)
@@ -222,12 +230,14 @@ target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE myconfig)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE myproto)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_arg_parser)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE mylib)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_soft_healthy)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_system_healthy)
 
 option(ENABLE_TEST "Enable unit testing" ON)
 # start test
 if(ENABLE_TEST) 
     enable_testing()
-    add_test(NAME FastCppServerUnitTest COMMAND ${TEST_PROGRAM_NAME})
+    add_test(NAME ${PROJECT_NAME}UnitTest COMMAND ${TEST_PROGRAM_NAME})
 endif()
 print_colored_message("------------------------------" COLOR magenta)
 
