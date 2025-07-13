@@ -1,0 +1,15 @@
+<map id="Init" name="Init">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,141,48,166"/>
+<area shape="rect" id="Node000002" href="$classSystemHealthyManager.html#a78e2a4289515dd73f4ef63bc0b635ff4" title=" " alt="" coords="96,141,195,166"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="48,151,82,151,82,156,48,156"/>
+<area shape="rect" id="Node000003" href="$classSystemHealthyTools_1_1CPUInfoTools.html#afc7a2398f7160e11e6d3dbb3b8f940d3" title=" " alt="" coords="249,5,469,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="154,138,189,97,214,74,241,55,254,48,257,53,244,60,217,79,193,101,158,142"/>
+<area shape="rect" id="Node000004" href="$classSystemHealthyTools_1_1DiskInfoTools.html#a6fb2528e70d3f4c2407e9f3f808ffd67" title=" " alt="" coords="247,69,471,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="183,138,242,119,269,111,271,116,243,124,184,143"/>
+<area shape="rect" id="Node000005" href="$classSystemHealthyTools_1_1GPUInfoTools.html#a33a7878e903863cbbd1a2e24ac2eeeaa" title=" " alt="" coords="247,133,470,173"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="195,151,233,151,233,156,195,156"/>
+<area shape="rect" id="Node000006" href="$classSystemHealthyTools_1_1MemInfoTools.html#a7d1efa86655aef36739a8e6c9976a16c" title=" " alt="" coords="243,197,475,237"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="184,164,243,183,271,191,269,196,242,188,183,169"/>
+<area shape="rect" id="Node000007" href="$classSystemHealthyTools_1_1NetInfoTools.html#aa39609741bef5a7e60b2acf97a68d972" title=" " alt="" coords="253,261,465,301"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="158,165,193,206,217,228,244,247,257,254,254,258,241,252,214,232,189,209,154,168"/>
+</map>
