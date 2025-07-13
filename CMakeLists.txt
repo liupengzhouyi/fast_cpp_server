@@ -233,6 +233,12 @@ target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE mylib)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_soft_healthy)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_system_healthy)
 
+include(GoogleTest)
+gtest_discover_tests(${TEST_PROGRAM_NAME}
+    TEST_PREFIX "${TEST_PROGRAM_NAME}."
+    DISCOVERY_TIMEOUT 30
+)
+
 option(ENABLE_TEST "Enable unit testing" ON)
 # start test
 if(ENABLE_TEST) 
