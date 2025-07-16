@@ -15,14 +15,15 @@
 #include "ArgumentParser.h"
 #include "MyLog.h"
 
-#include "system_healthy.h"
+// #include "system_healthy.h"
+#include "MySystemHealthyManager.h"
 
 #include "SimpleTcpClient.h"
 #include "ThreadSafeBuffer.h"
 #include "DeviceOnlineMonitor.h"
 
 using namespace tools;
-
+using namespace MySystemHealthy;
 using json = nlohmann::json;
 
 int main(int argc, char* argv[]) {
@@ -64,18 +65,20 @@ int main(int argc, char* argv[]) {
     std::string json_str = data.dump();
     std::cout << json_str << std::endl;
 
-    SystemHealthy systemHealthy;
+    // SystemHealthy systemHealthy;
 
-    if (systemHealthy.checkSystemHealth()) {
-        std::cout << "System is healthy." << std::endl;
-    } else {
-        std::cout << "System is not healthy." << std::endl;
-    }
+    // if (systemHealthy.checkSystemHealth()) {
+    //     std::cout << "System is healthy." << std::endl;
+    // } else {
+    //     std::cout << "System is not healthy." << std::endl;
+    // }
 
-    auto report = systemHealthy.getHealthReport();
-    for (const auto& [key, value] : report) {
-        std::cout << key << ": " << value << std::endl;
-    }
+    // auto report = systemHealthy.getHealthReport();
+    // for (const auto& [key, value] : report) {
+    //     std::cout << key << ": " << value << std::endl;
+    // }
+
+    MySystemHealthyManager::GetInstance().Init(5);
 
     cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/users/octocat"});
 

@@ -191,6 +191,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE myconfig)
 target_link_libraries(${PROJECT_NAME} PRIVATE myproto)
 target_link_libraries(${PROJECT_NAME} PRIVATE my_arg_parser)
 target_link_libraries(${PROJECT_NAME} PRIVATE my_soft_healthy)
+target_link_libraries(${PROJECT_NAME} PRIVATE my_system_healthy)
 target_link_libraries(${PROJECT_NAME} PRIVATE mylib)
 
 add_dependencies(mylog spdlog::spdlog)

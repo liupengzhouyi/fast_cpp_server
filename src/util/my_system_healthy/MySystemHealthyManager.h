@@ -11,7 +11,7 @@ namespace MySystemHealthy {
 class MySystemHealthyManager {
 
 public:
-  static MySystemHealthyManager& Instance();
+  static MySystemHealthyManager& GetInstance();
 
   void Init(int update_interval_sec = 5); // 可传入采样周期
   const SystemHealthy::SystemInfo GetSystemInfo();

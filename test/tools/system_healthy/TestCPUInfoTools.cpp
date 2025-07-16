@@ -4,6 +4,6 @@
 
 
 TEST(CPUInfoToolsTest, GetCPUModelTest) {
-    SystemHealthy::CPUInfo cpuInfo = SystemHealthyTools::CPUInfoTools::CollectCPUInfo();
+    SystemHealthy::CPUInfo cpuInfo = MySystemHealthy::CPUInfoTools::CollectCPUInfo();
     EXPECT_GT(cpuInfo.architecture(), "");
 }

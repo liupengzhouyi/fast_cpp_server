@@ -4,6 +4,6 @@
 
 
 TEST(ProcessInfoToolsTest, GetProcessInfoTest) {
-    std::vector<SystemHealthy::ProcessInfo> processInfoList = SystemHealthyTools::ProcessInfoTools::CollectProcessInfo();
+    std::vector<SystemHealthy::ProcessInfo> processInfoList = MySystemHealthy::ProcessInfoTools::CollectProcessInfo();
     EXPECT_GT(processInfoList.size(), 0);
 }
