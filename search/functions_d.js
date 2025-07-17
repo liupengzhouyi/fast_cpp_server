@@ -9,7 +9,7 @@ var searchData=
   ['setprocessinfo_6',['setProcessInfo',['../classHealthSnapshot.html#ae21c405e4c94076065eb0296fefd0ddc',1,'HealthSnapshot']]],
   ['setthreadsnapshots_7',['setThreadSnapshots',['../classHealthSnapshot.html#a01643e4840a9e11183749dcdc6a2b6e4',1,'HealthSnapshot']]],
   ['setuptime_8',['setUptime',['../classHealthSnapshot.html#ad0731b3e89fe4ac255af6999d4a55ddd',1,'HealthSnapshot']]],
-  ['shutdown_9',['shutdown',['../classMySystemHealthy_1_1MySystemHealthyManager.html#ac5f038c2b480cf9ef5e19e3eba8dbaf9',1,'MySystemHealthy::MySystemHealthyManager::Shutdown()'],['../classtools_1_1thread__safe__queue_1_1ThreadSafeQueue.html#a7861ee1569802186a619778efc85af13',1,'tools::thread_safe_queue::ThreadSafeQueue::shutdown()']]],
+  ['shutdown_9',['shutdown',['../classtools_1_1thread__safe__queue_1_1ThreadSafeQueue.html#a7861ee1569802186a619778efc85af13',1,'tools::thread_safe_queue::ThreadSafeQueue::shutdown()'],['../classMySystemHealthy_1_1MySystemHealthyManager.html#ac5f038c2b480cf9ef5e19e3eba8dbaf9',1,'MySystemHealthy::MySystemHealthyManager::Shutdown()']]],
   ['simpletcpclient_10',['SimpleTcpClient',['../classtools_1_1SimpleTcpClient.html#a1745a371702da3b33bfa83c4fa2d462f',1,'tools::SimpleTcpClient']]],
   ['size_11',['size',['../classtools_1_1ThreadSafeBuffer.html#a259cb5a711406a8c3e5d937eb9350cca',1,'tools::ThreadSafeBuffer::size()'],['../classtools_1_1thread__safe__queue_1_1ThreadSafeQueue.html#a259cb5a711406a8c3e5d937eb9350cca',1,'tools::thread_safe_queue::ThreadSafeQueue::size()']]],
   ['softhealthmonitorconfig_12',['SoftHealthMonitorConfig',['../classSoftHealthMonitorConfig.html#af4bc8ee367e2992aea6249b20f8ff5f3',1,'SoftHealthMonitorConfig']]],

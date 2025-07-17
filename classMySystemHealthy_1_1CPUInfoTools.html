@@ -88,11 +88,15 @@ Public 成员函数</h2></td></tr>
 <tr class="separator:abaf35e72699bd36dcab743dbf3867c4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68d47900bf10b8760977b140396b6322" id="r_a68d47900bf10b8760977b140396b6322"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMySystemHealthy_1_1CPUInfoTools.html#a68d47900bf10b8760977b140396b6322">~CPUInfoTools</a> ()</td></tr>
 <tr class="separator:a68d47900bf10b8760977b140396b6322"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7371ec344ffe8a6719b125d91805fc02" id="r_a7371ec344ffe8a6719b125d91805fc02"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMySystemHealthy_1_1CPUInfoTools.html#a7371ec344ffe8a6719b125d91805fc02">getArchitecture</a> () const</td></tr>
+<tr class="separator:a7371ec344ffe8a6719b125d91805fc02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 静态 Public 成员函数</h2></td></tr>
 <tr class="memitem:afc7a2398f7160e11e6d3dbb3b8f940d3" id="r_afc7a2398f7160e11e6d3dbb3b8f940d3"><td class="memItemLeft" align="right" valign="top">static SystemHealthy::CPUInfo&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMySystemHealthy_1_1CPUInfoTools.html#afc7a2398f7160e11e6d3dbb3b8f940d3">CollectCPUInfo</a> ()</td></tr>
 <tr class="separator:afc7a2398f7160e11e6d3dbb3b8f940d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab68a6c38395cdc1056dca6ef4fb7e378" id="r_ab68a6c38395cdc1056dca6ef4fb7e378"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMySystemHealthy_1_1CPUInfoTools.html#ab68a6c38395cdc1056dca6ef4fb7e378">getUsagePercent</a> (const std::string &amp;oneCPUInfo)</td></tr>
+<tr class="separator:ab68a6c38395cdc1056dca6ef4fb7e378"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">构造及析构函数说明</h2>
 <a id="abaf35e72699bd36dcab743dbf3867c4a" name="abaf35e72699bd36dcab743dbf3867c4a"></a>
@@ -153,13 +157,88 @@ Public 成员函数</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">引用了 <a class="el" href="classMySystemHealthy_1_1CPUInfoTools.html#ab68a6c38395cdc1056dca6ef4fb7e378">CPUInfoTools::getUsagePercent()</a> , 以及 <a class="el" href="MyLog_8h.html#a800125219a3ff4a245066255316ead8b">MYLOG_INFO</a>.</p>
+
 <p class="reference">被这些函数引用 <a class="el" href="classMySystemHealthy_1_1MySystemHealthyManager.html#a78e2a4289515dd73f4ef63bc0b635ff4">MySystemHealthyManager::WorkerLoop()</a>.</p>
+<div class="dynheader">
+函数调用图:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMySystemHealthy_1_1CPUInfoTools_afc7a2398f7160e11e6d3dbb3b8f940d3_cgraph.png" border="0" usemap="#aclassMySystemHealthy_1_1CPUInfoTools_afc7a2398f7160e11e6d3dbb3b8f940d3_cgraph" alt=""/></div>
+<map name="aclassMySystemHealthy_1_1CPUInfoTools_afc7a2398f7160e11e6d3dbb3b8f940d3_cgraph" id="aclassMySystemHealthy_1_1CPUInfoTools_afc7a2398f7160e11e6d3dbb3b8f940d3_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,124,31"/>
+<area shape="rect" href="classMySystemHealthy_1_1CPUInfoTools.html#ab68a6c38395cdc1056dca6ef4fb7e378" title=" " alt="" coords="172,5,305,31"/>
+<area shape="poly" title=" " alt="" coords="124,15,158,15,158,21,124,21"/>
+</map>
+</div>
 <div class="dynheader">
 这是这个函数的调用关系图:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMySystemHealthy_1_1CPUInfoTools_afc7a2398f7160e11e6d3dbb3b8f940d3_icgraph.png" border="0" usemap="#aclassMySystemHealthy_1_1CPUInfoTools_afc7a2398f7160e11e6d3dbb3b8f940d3_icgraph" alt=""/></div>
 <map name="aclassMySystemHealthy_1_1CPUInfoTools_afc7a2398f7160e11e6d3dbb3b8f940d3_icgraph" id="aclassMySystemHealthy_1_1CPUInfoTools_afc7a2398f7160e11e6d3dbb3b8f940d3_icgraph">
 <area shape="rect" title=" " alt="" coords="641,13,760,38"/>
+<area shape="rect" href="classMySystemHealthy_1_1MySystemHealthyManager.html#a78e2a4289515dd73f4ef63bc0b635ff4" title=" " alt="" coords="375,5,593,45"/>
+<area shape="poly" title=" " alt="" coords="627,28,594,28,594,23,627,23"/>
+<area shape="rect" href="classMySystemHealthy_1_1MySystemHealthyManager.html#a42f202086b1f8408080c9b979ccc1f14" title=" " alt="" coords="108,5,327,45"/>
+<area shape="poly" title=" " alt="" coords="361,28,327,28,327,23,361,23"/>
+<area shape="rect" href="main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,13,60,38"/>
+<area shape="poly" title=" " alt="" coords="94,28,60,28,60,23,94,23"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a7371ec344ffe8a6719b125d91805fc02" name="a7371ec344ffe8a6719b125d91805fc02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7371ec344ffe8a6719b125d91805fc02">&#9670;&#160;</a></span>getArchitecture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string getArchitecture </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab68a6c38395cdc1056dca6ef4fb7e378" name="ab68a6c38395cdc1056dca6ef4fb7e378"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab68a6c38395cdc1056dca6ef4fb7e378">&#9670;&#160;</a></span>getUsagePercent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float getUsagePercent </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>oneCPUInfo</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">引用了 <a class="el" href="MyLog_8h.html#aa4c155f6a7b34ba363dc933abfe88686">MYLOG_ERROR</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="classMySystemHealthy_1_1CPUInfoTools.html#afc7a2398f7160e11e6d3dbb3b8f940d3">CPUInfoTools::CollectCPUInfo()</a>.</p>
+<div class="dynheader">
+这是这个函数的调用关系图:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMySystemHealthy_1_1CPUInfoTools_ab68a6c38395cdc1056dca6ef4fb7e378_icgraph.png" border="0" usemap="#aclassMySystemHealthy_1_1CPUInfoTools_ab68a6c38395cdc1056dca6ef4fb7e378_icgraph" alt=""/></div>
+<map name="aclassMySystemHealthy_1_1CPUInfoTools_ab68a6c38395cdc1056dca6ef4fb7e378_icgraph" id="aclassMySystemHealthy_1_1CPUInfoTools_ab68a6c38395cdc1056dca6ef4fb7e378_icgraph">
+<area shape="rect" title=" " alt="" coords="808,13,941,38"/>
+<area shape="rect" href="classMySystemHealthy_1_1CPUInfoTools.html#afc7a2398f7160e11e6d3dbb3b8f940d3" title=" " alt="" coords="641,13,760,38"/>
+<area shape="poly" title=" " alt="" coords="794,28,760,28,760,23,794,23"/>
 <area shape="rect" href="classMySystemHealthy_1_1MySystemHealthyManager.html#a78e2a4289515dd73f4ef63bc0b635ff4" title=" " alt="" coords="375,5,593,45"/>
 <area shape="poly" title=" " alt="" coords="627,28,594,28,594,23,627,23"/>
 <area shape="rect" href="classMySystemHealthy_1_1MySystemHealthyManager.html#a42f202086b1f8408080c9b979ccc1f14" title=" " alt="" coords="108,5,327,45"/>

@@ -10,7 +10,7 @@ var searchData=
   ['setthreadsnapshots_7',['setThreadSnapshots',['../classHealthSnapshot.html#a01643e4840a9e11183749dcdc6a2b6e4',1,'HealthSnapshot']]],
   ['setuptime_8',['setUptime',['../classHealthSnapshot.html#ad0731b3e89fe4ac255af6999d4a55ddd',1,'HealthSnapshot']]],
   ['shortopt_9',['shortOpt',['../structArgumentParser_1_1Option.html#a30423ff6e2fedca11d06c95e933dfd2f',1,'ArgumentParser::Option']]],
-  ['shutdown_10',['shutdown',['../classMySystemHealthy_1_1MySystemHealthyManager.html#ac5f038c2b480cf9ef5e19e3eba8dbaf9',1,'MySystemHealthy::MySystemHealthyManager::Shutdown()'],['../classtools_1_1thread__safe__queue_1_1ThreadSafeQueue.html#a7861ee1569802186a619778efc85af13',1,'tools::thread_safe_queue::ThreadSafeQueue::shutdown()']]],
+  ['shutdown_10',['shutdown',['../classtools_1_1thread__safe__queue_1_1ThreadSafeQueue.html#a7861ee1569802186a619778efc85af13',1,'tools::thread_safe_queue::ThreadSafeQueue::shutdown()'],['../classMySystemHealthy_1_1MySystemHealthyManager.html#ac5f038c2b480cf9ef5e19e3eba8dbaf9',1,'MySystemHealthy::MySystemHealthyManager::Shutdown()']]],
   ['shutdown_5f_11',['shutdown_',['../classtools_1_1thread__safe__queue_1_1ThreadSafeQueue.html#a516248545bae05b96887aea52ebc6715',1,'tools::thread_safe_queue::ThreadSafeQueue']]],
   ['simpletcpclient_12',['simpletcpclient',['../classtools_1_1SimpleTcpClient.html#a1745a371702da3b33bfa83c4fa2d462f',1,'tools::SimpleTcpClient::SimpleTcpClient()'],['../classtools_1_1SimpleTcpClient.html',1,'SimpleTcpClient']]],
   ['simpletcpclient_2ecpp_13',['SimpleTcpClient.cpp',['../SimpleTcpClient_8cpp.html',1,'']]],
