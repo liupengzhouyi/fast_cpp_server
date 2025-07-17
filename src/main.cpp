@@ -23,7 +23,7 @@
 #include "DeviceOnlineMonitor.h"
 
 using namespace tools;
-using namespace MySystemHealthy;
+// using namespace MySystemHealthy;
 using json = nlohmann::json;
 
 int main(int argc, char* argv[]) {
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
     //     std::cout << key << ": " << value << std::endl;
     // }
 
-    MySystemHealthyManager::GetInstance().Init(5);
+    MySystemHealthy::MySystemHealthyManager::GetInstance().Init(5);
 
     cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/users/octocat"});
 

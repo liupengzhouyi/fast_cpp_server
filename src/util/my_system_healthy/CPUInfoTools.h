@@ -11,6 +11,11 @@ public:
     ~CPUInfoTools();
     
     static SystemHealthy::CPUInfo CollectCPUInfo();
+
+    static float getUsagePercent(const std::string& oneCPUInfo);
+
+    std::string getArchitecture() const;
+
 };
 
 }
