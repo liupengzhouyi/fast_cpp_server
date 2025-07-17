@@ -9,14 +9,12 @@ var searchData=
   ['setprocessinfo_6',['setProcessInfo',['../classHealthSnapshot.html#ae21c405e4c94076065eb0296fefd0ddc',1,'HealthSnapshot']]],
   ['setthreadsnapshots_7',['setThreadSnapshots',['../classHealthSnapshot.html#a01643e4840a9e11183749dcdc6a2b6e4',1,'HealthSnapshot']]],
   ['setuptime_8',['setUptime',['../classHealthSnapshot.html#ad0731b3e89fe4ac255af6999d4a55ddd',1,'HealthSnapshot']]],
-  ['shutdown_9',['shutdown',['../classSystemHealthyManager.html#ac5f038c2b480cf9ef5e19e3eba8dbaf9',1,'SystemHealthyManager::Shutdown()'],['../classMySystemHealthy_1_1MySystemHealthyManager.html#ac5f038c2b480cf9ef5e19e3eba8dbaf9',1,'MySystemHealthy::MySystemHealthyManager::Shutdown()'],['../classtools_1_1thread__safe__queue_1_1ThreadSafeQueue.html#a7861ee1569802186a619778efc85af13',1,'tools::thread_safe_queue::ThreadSafeQueue::shutdown()']]],
+  ['shutdown_9',['shutdown',['../classMySystemHealthy_1_1MySystemHealthyManager.html#ac5f038c2b480cf9ef5e19e3eba8dbaf9',1,'MySystemHealthy::MySystemHealthyManager::Shutdown()'],['../classtools_1_1thread__safe__queue_1_1ThreadSafeQueue.html#a7861ee1569802186a619778efc85af13',1,'tools::thread_safe_queue::ThreadSafeQueue::shutdown()']]],
   ['simpletcpclient_10',['SimpleTcpClient',['../classtools_1_1SimpleTcpClient.html#a1745a371702da3b33bfa83c4fa2d462f',1,'tools::SimpleTcpClient']]],
   ['size_11',['size',['../classtools_1_1ThreadSafeBuffer.html#a259cb5a711406a8c3e5d937eb9350cca',1,'tools::ThreadSafeBuffer::size()'],['../classtools_1_1thread__safe__queue_1_1ThreadSafeQueue.html#a259cb5a711406a8c3e5d937eb9350cca',1,'tools::thread_safe_queue::ThreadSafeQueue::size()']]],
   ['softhealthmonitorconfig_12',['SoftHealthMonitorConfig',['../classSoftHealthMonitorConfig.html#af4bc8ee367e2992aea6249b20f8ff5f3',1,'SoftHealthMonitorConfig']]],
   ['softhealthmonitormanager_13',['SoftHealthMonitorManager',['../classSoftHealthMonitorManager.html#a587b2f9aeeec9c0559ba24ffd4568415',1,'SoftHealthMonitorManager']]],
   ['start_14',['start',['../classDeviceOnlineMonitor.html#a60de64d75454385b23995437f1d72669',1,'DeviceOnlineMonitor::start()'],['../classSoftHealthMonitorManager.html#a60de64d75454385b23995437f1d72669',1,'SoftHealthMonitorManager::start()']]],
   ['stop_15',['stop',['../classDeviceOnlineMonitor.html#a8c528baf37154d347366083f0f816846',1,'DeviceOnlineMonitor::stop()'],['../classSoftHealthMonitorManager.html#a8c528baf37154d347366083f0f816846',1,'SoftHealthMonitorManager::stop()']]],
-  ['subtract_16',['subtract',['../classExample.html#a470a2cec9c256d196c0e6b8fc7a6ec36',1,'Example']]],
-  ['systemhealthy_17',['systemhealthy',['../classSystemHealthy.html#a2e73d0c7e8090a1d3367ffd1a005a401',1,'SystemHealthy::SystemHealthy()'],['../classSystemHealthy.html#a2e73d0c7e8090a1d3367ffd1a005a401',1,'SystemHealthy::SystemHealthy()']]],
-  ['systemhealthymanager_18',['SystemHealthyManager',['../classSystemHealthyManager.html#a0512f36929a7c8ae6f8181c4037abdf3',1,'SystemHealthyManager']]]
+  ['subtract_16',['subtract',['../classExample.html#a470a2cec9c256d196c0e6b8fc7a6ec36',1,'Example']]]
 ];

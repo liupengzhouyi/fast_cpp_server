@@ -8,5 +8,5 @@ var searchData=
   ['connected_5f_5',['connected_',['../classtools_1_1SimpleTcpClient.html#a394f715193a382d9c59ec69143a3cc4d',1,'tools::SimpleTcpClient']]],
   ['connmutex_5f_6',['connMutex_',['../classtools_1_1SimpleTcpClient.html#ac669324da44bb5dd470e9bfc1f8b00b5',1,'tools::SimpleTcpClient']]],
   ['cpu_5fusage_5fpercent_7',['cpu_usage_percent',['../structThreadSnapshot.html#a295e34a22c4d3d19004e4ff577ea2f5d',1,'ThreadSnapshot']]],
-  ['current_5finfo_5f_8',['current_info_',['../classSystemHealthyManager.html#a462cf695b2e418a69ff82950b1d9a295',1,'SystemHealthyManager::current_info_'],['../classMySystemHealthy_1_1MySystemHealthyManager.html#a462cf695b2e418a69ff82950b1d9a295',1,'MySystemHealthy::MySystemHealthyManager::current_info_']]]
+  ['current_5finfo_5f_8',['current_info_',['../classMySystemHealthy_1_1MySystemHealthyManager.html#a462cf695b2e418a69ff82950b1d9a295',1,'MySystemHealthy::MySystemHealthyManager']]]
 ];
