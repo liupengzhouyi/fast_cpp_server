@@ -146,6 +146,36 @@ add_subdirectory(external/mosquitto)
 # 添加libzmq库
 set(WITH_TLS OFF)
 add_subdirectory(external/libzmq)
+
+# --------------------- OpenCV 设置 ---------------------
+# 指定需要构建的模块（可按需调整）
+set(BUILD_LIST core,imgproc,highgui,imgcodecs,videoio)
+# 是否构建为静态库
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libs")
+# opencv contrib 路径（可选）
+set(OPENCV_EXTRA_MODULES_PATH ${CMAKE_SOURCE_DIR}/external/opencv_contrib/modules)
+set(WITH_PROTOBUF OFF CACHE BOOL "Don't use protobuf in OpenCV")
+# 添加 OpenCV 子目录
+add_subdirectory(external/opencv)
+
+# --------------------- Eigen 设置 ---------------------
+# Eigen 是头文件库，不需要编译，只需添加路径
+set(EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/eigen)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
+# --------------------- SymEngine 设置 ---------------------
+# 启用静态构建（可选）
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static symengine")
+set(HAVE_SYMENGINE_GMP OFF CACHE BOOL "Not use GMP")
+set(SYMENGINE_USE_MPFR OFF CACHE BOOL "")
+set(SYMENGINE_USE_MPC OFF CACHE BOOL "")
+set(SYMENGINE_USE_FLINT OFF CACHE BOOL "")
+# 关闭测试与示例
+set(BUILD_TESTS OFF CACHE BOOL "")
+set(BUILD_BENCHMARKS OFF CACHE BOOL "")
+set(BUILD_EXAMPLES OFF CACHE BOOL "")
+add_subdirectory(external/symengine)
+
 # 添加 myproto 库
 set(BUILD_MY_PROTO ON CACHE BOOL "Build myproto library")
 add_subdirectory(src/protobuf)
@@ -167,6 +197,11 @@ set(THIRD_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/external/libzmq/include
     ${PROJECT_SOURCE_DIR}/external/easyloggingpp/src
     ${PROJECT_SOURCE_DIR}/external/protobuf/src
+    ${PROJECT_SOURCE_DIR}/external/eigen # Eigen 是头文件-only
+    ${PROJECT_SOURCE_DIR}/external/SymEngine/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/core/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/imgcodecs/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/highgui/include
 )
 
 set(MY_INCLUDE_DIRECTORIES "")
@@ -193,6 +228,17 @@ target_link_libraries(${PROJECT_NAME} PRIVATE my_arg_parser)
 target_link_libraries(${PROJECT_NAME} PRIVATE my_soft_healthy)
 target_link_libraries(${PROJECT_NAME} PRIVATE my_system_healthy)
 target_link_libraries(${PROJECT_NAME} PRIVATE mylib)
+# 链接 OpenCV 库
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_core)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_imgproc)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_highgui)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_imgcodecs)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_videoio)
+# 链接 Engine（Eigen 是头文件库，不需要 link）
+# 链接 SymEngine
+target_link_libraries(${PROJECT_NAME} PRIVATE symengine)
+# # 包含 Eigen 头文件
+# target_include_directories(${PROJECT_NAME} PRIVATE ${EIGEN3_INCLUDE_DIR})
 
 add_dependencies(mylog spdlog::spdlog)
 add_dependencies(mylib mylog)
@@ -233,6 +279,17 @@ target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_arg_parser)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE mylib)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_soft_healthy)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_system_healthy)
+# 链接 OpenCV 库
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_core)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_imgproc)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_highgui)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_imgcodecs)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_videoio)
+# 链接 SymEngine（Eigen 是头文件库，不需要 link）
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE symengine)
+# 包含 Eigen 头文件
+target_include_directories(${TEST_PROGRAM_NAME} PRIVATE ${EIGEN3_INCLUDE_DIR})
+
 
 include(GoogleTest)
 gtest_discover_tests(${TEST_PROGRAM_NAME}

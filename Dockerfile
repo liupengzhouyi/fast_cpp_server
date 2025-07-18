@@ -26,6 +26,7 @@ RUN apt-get update && apt-get upgrade -y && \
     libssl-dev \
     libcurl4-openssl-dev \
     clangd-14 \
+    libgmp-dev \
     && apt-get clean
 
 # # 安装 Python 包 pygraphviz
