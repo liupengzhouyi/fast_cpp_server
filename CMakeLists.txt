@@ -197,11 +197,16 @@ set(THIRD_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/external/libzmq/include
     ${PROJECT_SOURCE_DIR}/external/easyloggingpp/src
     ${PROJECT_SOURCE_DIR}/external/protobuf/src
-    ${PROJECT_SOURCE_DIR}/external/eigen # Eigen 是头文件-only
-    ${PROJECT_SOURCE_DIR}/external/SymEngine/include
+    ${PROJECT_SOURCE_DIR}/external/eigen                            # Eigen 是头文件-only
+    ${PROJECT_SOURCE_DIR}/external/symengine
+    ${PROJECT_SOURCE_DIR}/external/opencv/include
     ${PROJECT_SOURCE_DIR}/external/opencv/modules/core/include
     ${PROJECT_SOURCE_DIR}/external/opencv/modules/imgcodecs/include
     ${PROJECT_SOURCE_DIR}/external/opencv/modules/highgui/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/videoio/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/imgproc/include
+    ${PROJECT_SOURCE_DIR}/build                                     # OpenCV 编译后的头文件路径
+    ${PROJECT_SOURCE_DIR}/build/external/symengine                  # SymEngine 编译后的头文件路径
 )
 
 set(MY_INCLUDE_DIRECTORIES "")
@@ -248,6 +253,12 @@ add_dependencies(mylib my_soft_healthy)
 add_dependencies(mylib libzmq)
 add_dependencies(mylib cpr::cpr)
 add_dependencies(mylib nlohmann_json::nlohmann_json)
+add_dependencies(mylib symengine)
+add_dependencies(mylib opencv_core)
+add_dependencies(mylib opencv_imgproc)
+add_dependencies(mylib opencv_highgui)
+add_dependencies(mylib opencv_imgcodecs)
+add_dependencies(mylib opencv_videoio)
 
 pretty_print_list("MIAN_SOURCE " MIAN_SOURCE)
 pretty_print_list("MY_INCLUDE_DIRECTORIES List" MY_INCLUDE_DIRECTORIES)

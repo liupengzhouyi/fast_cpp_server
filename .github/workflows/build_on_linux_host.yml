@@ -22,12 +22,31 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install env
+    - name: update Install env version
       run: |
         sudo apt-get update
         sudo apt-get upgrade -y
-        sudo apt-get install -y build-essential gcc g++ cmake git curl wget unzip gcovr nginx doxygen graphviz graphviz-dev python3.12 python3-pip libssl-dev libcurl4-openssl-dev clangd-14 libgmp-dev
-        sudo apt-get clean
+
+    - name: Install env build-essential
+      run: sudo apt-get install -y build-essential
+    
+    - name: Install C++ environment
+      run: sudo apt-get install -y gcc g++ cmake clangd-14
+
+    - name: Install env tools
+      run: sudo apt-get install -y git curl wget unzip libssl-dev libcurl4-openssl-dev nginx
+
+    - name: Install tools for Document and Code Unittests
+      run: sudo apt-get install -y gcovr doxygen graphviz graphviz-dev
+    
+    - name: Install python tools
+      run: sudo apt-get install -y python3.12 python3-pip
+      
+    - name: Install tools for opencv
+      run: sudo apt-get install -y libgmp-dev
+    
+    - name: apt-get clean
+      run: sudo apt-get clean
 
     - name: Download external and Build target folder
       run: sh ${{github.workspace}}/build.sh
@@ -41,7 +60,7 @@ jobs:
       
     - name: Test
       working-directory: ${{github.workspace}}/build
-      run: ctest -R "fast_cpp_server_my_Test.*" -E "(PingGoogle|GetGPUInfoTest|GetProcessInfoTest|Shutdown_String|Shutdown_MyStruct|MyLogTest.DefaultInit|MySystemHealthyManagerInitAndGetData)"
+      run: ctest -R "fast_cpp_server_my_Test.*" -E "(PingGoogle|GetGPUInfoTest|GetProcessInfoTest|Shutdown_String|Shutdown_MyStruct|MyLogTest.DefaultInit|MySystemHealthyManagerInitAndGetData|RunAndGetSnapshotAfter5Seconds)"
 
     - name: Cpack
       working-directory: ${{github.workspace}}/build
