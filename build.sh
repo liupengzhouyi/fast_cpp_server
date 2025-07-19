@@ -19,15 +19,6 @@ else
   echo "📁 Failed to create external directory. ❌"
 fi
 
-# 创建include目录
-if [ -d "src/include" ]; then
-  echo "📁 Directory 'src/include' already exists. ✅"
-elif mkdir src/include; then
-  echo "📁 Successfully created src/include directory. ✅"
-else
-  echo "📁 Failed to create src/include directory. ❌"
-fi
-
 # 创建src目录
 if [ -d "src" ]; then
   echo "📁 Directory 'src' already exists. ✅"
@@ -191,6 +182,51 @@ elif git clone --branch 21.x https://github.com/protocolbuffers/protobuf.git ext
   echo "Run protobuf code init over. ✅"
 else
   echo "⬇️ Failed to download protobuf. ❌"
+fi
+
+# 下载 eigen; 它是 header-only，无需编译。
+if [ -d "external/eigen" ]; then
+  echo "⬇️ Directory 'external/eigen' already exists. ✅"
+elif git clone https://gitlab.com/libeigen/eigen.git external/eigen; then
+  echo "⬇️ Successfully downloaded eigen. ✅"
+else
+  echo "⬇️ Failed to download eigen. ❌"
+fi
+
+# 下载 OpenCV
+if [ -d "external/opencv" ]; then
+  echo "⬇️ Directory 'external/opencv' already exists. ✅"
+elif git clone --branch 4.9.0 https://github.com/opencv/opencv.git external/opencv; then
+  echo "⬇️ Successfully downloaded OpenCV. ✅"
+  cd external/opencv
+  git submodule update --init --recursive
+  cd -
+else
+  echo "⬇️ Failed to download OpenCV. ❌"
+fi
+
+# 下载 OpenCV contrib（可选）
+if [ -d "external/opencv_contrib" ]; then
+  echo "⬇️ Directory 'external/opencv_contrib' already exists. ✅"
+elif git clone --branch 4.9.0 https://github.com/opencv/opencv_contrib.git external/opencv_contrib; then
+  echo "⬇️ Successfully downloaded OpenCV contrib. ✅"
+  cd external/opencv_contrib
+  git submodule update --init --recursive
+  cd -
+else
+  echo "⬇️ Failed to download OpenCV contrib. ❌"
+fi
+
+# 下载 SymEngine
+if [ -d "external/symengine" ]; then
+  echo "⬇️ Directory 'external/symengine' already exists. ✅"
+elif git clone https://github.com/symengine/symengine.git external/symengine; then
+  echo "⬇️ Successfully downloaded SymEngine. ✅"
+  cd external/symengine
+  git submodule update --init --recursive
+  cd -
+else
+  echo "⬇️ Failed to download SymEngine. ❌"
 fi
 
 # create main.cpp

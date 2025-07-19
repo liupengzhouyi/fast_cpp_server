@@ -68,7 +68,6 @@ make coverage
 
 cd ./../scripts/
 sh /workspace/scripts/start_server_for_covorage_report.sh
-
 ```
 
 ## How can I generate Code Design document ?

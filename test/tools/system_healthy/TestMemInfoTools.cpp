@@ -4,6 +4,6 @@
 
 
 TEST(MemInfoToolsTest, GetMemInfoTest) {
-    SystemHealthy::MemInfo memInfo = SystemHealthyTools::MemInfoTools::CollectMemInfo();
+    SystemHealthy::MemInfo memInfo = MySystemHealthy::MemInfoTools::CollectMemInfo();
     EXPECT_GT(memInfo.usage_percent(), 0);
 }

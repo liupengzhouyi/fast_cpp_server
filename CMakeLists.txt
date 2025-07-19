@@ -146,6 +146,37 @@ add_subdirectory(external/mosquitto)
 # 添加libzmq库
 set(WITH_TLS OFF)
 add_subdirectory(external/libzmq)
+
+# --------------------- OpenCV 设置 ---------------------
+# 指定需要构建的模块（可按需调整）,
+
+set(BUILD_LIST calib3d,core,dnn,features2d,flann,gapi,highgui,imgcodecs,imgproc,ml,objdetect,photo,stitching,video,videoio)
+# 是否构建为静态库
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libs")
+# opencv contrib 路径（可选）
+set(OPENCV_EXTRA_MODULES_PATH ${CMAKE_SOURCE_DIR}/external/opencv_contrib/modules)
+set(WITH_PROTOBUF OFF CACHE BOOL "Don't use protobuf in OpenCV")
+# 添加 OpenCV 子目录
+add_subdirectory(external/opencv)
+
+# --------------------- Eigen 设置 ---------------------
+# Eigen 是头文件库，不需要编译，只需添加路径
+set(EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/eigen)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
+# --------------------- SymEngine 设置 ---------------------
+# 启用静态构建（可选）
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static symengine")
+set(HAVE_SYMENGINE_GMP OFF CACHE BOOL "Not use GMP")
+set(SYMENGINE_USE_MPFR OFF CACHE BOOL "")
+set(SYMENGINE_USE_MPC OFF CACHE BOOL "")
+set(SYMENGINE_USE_FLINT OFF CACHE BOOL "")
+# 关闭测试与示例
+set(BUILD_TESTS OFF CACHE BOOL "")
+set(BUILD_BENCHMARKS OFF CACHE BOOL "")
+set(BUILD_EXAMPLES OFF CACHE BOOL "")
+add_subdirectory(external/symengine)
+
 # 添加 myproto 库
 set(BUILD_MY_PROTO ON CACHE BOOL "Build myproto library")
 add_subdirectory(src/protobuf)
@@ -167,6 +198,26 @@ set(THIRD_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/external/libzmq/include
     ${PROJECT_SOURCE_DIR}/external/easyloggingpp/src
     ${PROJECT_SOURCE_DIR}/external/protobuf/src
+    ${PROJECT_SOURCE_DIR}/external/eigen                            # Eigen 是头文件-only
+    ${PROJECT_SOURCE_DIR}/external/symengine
+    ${PROJECT_SOURCE_DIR}/external/opencv/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/calib3d/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/core/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/dnn/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/features2d/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/flann/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/gapi/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/highgui/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/imgcodecs/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/imgproc/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/ml/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/objdetect/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/photo/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/stitching/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/video/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/videoio/include
+    ${PROJECT_SOURCE_DIR}/build                                     # OpenCV 编译后的头文件路径
+    ${PROJECT_SOURCE_DIR}/build/external/symengine                  # SymEngine 编译后的头文件路径
 )
 
 set(MY_INCLUDE_DIRECTORIES "")
@@ -191,7 +242,30 @@ target_link_libraries(${PROJECT_NAME} PRIVATE myconfig)
 target_link_libraries(${PROJECT_NAME} PRIVATE myproto)
 target_link_libraries(${PROJECT_NAME} PRIVATE my_arg_parser)
 target_link_libraries(${PROJECT_NAME} PRIVATE my_soft_healthy)
+target_link_libraries(${PROJECT_NAME} PRIVATE my_system_healthy)
 target_link_libraries(${PROJECT_NAME} PRIVATE mylib)
+# 链接 OpenCV 库
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_calib3d)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_core)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_dnn)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_features2d)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_flann)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_gapi)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_highgui)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_imgcodecs)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_imgproc)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_ml)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_objdetect)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_photo)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_stitching)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_video)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_videoio)
+
+# 链接 Engine（Eigen 是头文件库，不需要 link）
+# 链接 SymEngine
+target_link_libraries(${PROJECT_NAME} PRIVATE symengine)
+# # 包含 Eigen 头文件
+# target_include_directories(${PROJECT_NAME} PRIVATE ${EIGEN3_INCLUDE_DIR})
 
 add_dependencies(mylog spdlog::spdlog)
 add_dependencies(mylib mylog)
@@ -201,6 +275,24 @@ add_dependencies(mylib my_soft_healthy)
 add_dependencies(mylib libzmq)
 add_dependencies(mylib cpr::cpr)
 add_dependencies(mylib nlohmann_json::nlohmann_json)
+add_dependencies(mylib symengine)
+# # 依赖 opencv lib
+# add_dependencies(mylib opencv_calib3d)
+# add_dependencies(mylib opencv_core)
+# add_dependencies(mylib opencv_dnn)
+# add_dependencies(mylib opencv_features2d)
+# add_dependencies(mylib opencv_flann)
+# add_dependencies(mylib opencv_gapi)
+# add_dependencies(mylib opencv_highgui)
+# add_dependencies(mylib opencv_imgcodecs)
+# add_dependencies(mylib opencv_imgproc)
+# add_dependencies(mylib opencv_ml)
+# add_dependencies(mylib opencv_objdetect)
+# add_dependencies(mylib opencv_photo)
+# add_dependencies(mylib opencv_stitching)
+# add_dependencies(mylib opencv_video)
+# add_dependencies(mylib opencv_videoio)
+
 
 pretty_print_list("MIAN_SOURCE " MIAN_SOURCE)
 pretty_print_list("MY_INCLUDE_DIRECTORIES List" MY_INCLUDE_DIRECTORIES)
@@ -232,6 +324,34 @@ target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_arg_parser)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE mylib)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_soft_healthy)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_system_healthy)
+# 链接 OpenCV 库
+# 链接 OpenCV 库
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_calib3d)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_core)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_dnn)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_features2d)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_flann)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_gapi)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_highgui)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_imgcodecs)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_imgproc)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_ml)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_objdetect)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_photo)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_stitching)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_video)
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_videoio)
+# 链接 SymEngine（Eigen 是头文件库，不需要 link）
+target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE symengine)
+# 包含 Eigen 头文件
+target_include_directories(${TEST_PROGRAM_NAME} PRIVATE ${EIGEN3_INCLUDE_DIR})
+
+
+include(GoogleTest)
+gtest_discover_tests(${TEST_PROGRAM_NAME}
+    TEST_PREFIX "${TEST_PROGRAM_NAME}."
+    DISCOVERY_TIMEOUT 30
+)
 
 option(ENABLE_TEST "Enable unit testing" ON)
 # start test

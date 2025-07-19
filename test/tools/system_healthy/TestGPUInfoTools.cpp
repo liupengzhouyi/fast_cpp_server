@@ -4,6 +4,6 @@
 
 
 TEST(GPUInfoToolsTest, GetGPUInfoTest) {
-    std::vector<SystemHealthy::GPUInfo> GPUInfos = SystemHealthyTools::GPUInfoTools::CollectGPUInfo();
+    std::vector<SystemHealthy::GPUInfo> GPUInfos = MySystemHealthy::GPUInfoTools::CollectGPUInfo();
     EXPECT_GT(GPUInfos.size(), 0);
 }

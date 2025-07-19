@@ -8,7 +8,6 @@ file(GLOB_RECURSE MYLIB_SOURCES
     ${PROJECT_SOURCE_DIR}/src/tools/simple_tcp_client/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_buffer/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/ping_tools/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/tools/system_healthy/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/example/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/monitor/device_online_monitor/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_queue/*.cpp
@@ -21,7 +20,6 @@ set(MYLIB_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/src/tools/simple_tcp_client
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_buffer
     ${PROJECT_SOURCE_DIR}/src/tools/ping_tools
-    ${PROJECT_SOURCE_DIR}/src/tools/system_healthy
     ${PROJECT_SOURCE_DIR}/src/tools/example
     ${PROJECT_SOURCE_DIR}/src/tools/monitor/device_online_monitor
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_queue
@@ -62,6 +60,8 @@ target_link_libraries(mylib PUBLIC libzmq)
 target_link_libraries(mylib PUBLIC pthread)
 # my_soft_healthy
 target_link_libraries(mylib PRIVATE my_soft_healthy)
+# my_system_healthy
+target_link_libraries(mylib PRIVATE my_system_healthy)
 
 print_colored_message("Adding mylib library with sources over" COLOR yellow)
 print_colored_message("------------------------------" COLOR magenta)

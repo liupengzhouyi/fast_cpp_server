@@ -18,7 +18,7 @@ MySystemHealthyManager::~MySystemHealthyManager() {
   Shutdown();
 }
 
-MySystemHealthyManager& MySystemHealthyManager::Instance() {
+MySystemHealthyManager& MySystemHealthyManager::GetInstance() {
   static MySystemHealthyManager instance;
   return instance;
 }

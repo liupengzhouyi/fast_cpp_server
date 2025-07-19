@@ -4,7 +4,7 @@
 
 
 TEST(NetInfoToolsTest, GetNetInfoTest) {
-    SystemHealthy::NetInfo netInfo = SystemHealthyTools::NetInfoTools::CollectNetInfo();
+    SystemHealthy::NetInfo netInfo = MySystemHealthy::NetInfoTools::CollectNetInfo();
     EXPECT_GT(netInfo.recv_bytes(), 0);
     EXPECT_GT(netInfo.transmit_bytes(), 0);
 }
