@@ -55,7 +55,13 @@ jobs:
       run: |
         cd ${{github.workspace}}/build
         cmake ..
-        make -j
+        CORES=$(nproc)
+        JOBS=$((CORES - 1))
+        if [ "$JOBS" -lt 1 ]; then
+          JOBS=1
+        fi
+        echo "* Using $JOBS jobs core for make"
+        make -j$JOBS
         ls -l
       
     - name: Test
