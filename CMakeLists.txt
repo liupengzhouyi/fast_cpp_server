@@ -148,8 +148,9 @@ set(WITH_TLS OFF)
 add_subdirectory(external/libzmq)
 
 # --------------------- OpenCV 设置 ---------------------
-# 指定需要构建的模块（可按需调整）
-set(BUILD_LIST core,imgproc,highgui,imgcodecs,videoio,calib3d,features2d,dnn)
+# 指定需要构建的模块（可按需调整）,
+
+set(BUILD_LIST calib3d,core,dnn,features2d,flann,gapi,highgui,imgcodecs,imgproc,ml,objdetect,photo,stitching,video,videoio)
 # 是否构建为静态库
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libs")
 # opencv contrib 路径（可选）
