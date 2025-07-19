@@ -149,7 +149,7 @@ add_subdirectory(external/libzmq)
 
 # --------------------- OpenCV 设置 ---------------------
 # 指定需要构建的模块（可按需调整）
-set(BUILD_LIST core,imgproc,highgui,imgcodecs,videoio)
+set(BUILD_LIST core,imgproc,highgui,imgcodecs,videoio,calib3d,features2d)
 # 是否构建为静态库
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libs")
 # opencv contrib 路径（可选）
@@ -205,6 +205,9 @@ set(THIRD_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/external/opencv/modules/highgui/include
     ${PROJECT_SOURCE_DIR}/external/opencv/modules/videoio/include
     ${PROJECT_SOURCE_DIR}/external/opencv/modules/imgproc/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/calib3d/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/features2d/include
+    ${PROJECT_SOURCE_DIR}/external/opencv/modules/flann/include
     ${PROJECT_SOURCE_DIR}/build                                     # OpenCV 编译后的头文件路径
     ${PROJECT_SOURCE_DIR}/build/external/symengine                  # SymEngine 编译后的头文件路径
 )
@@ -239,6 +242,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE opencv_imgproc)
 target_link_libraries(${PROJECT_NAME} PRIVATE opencv_highgui)
 target_link_libraries(${PROJECT_NAME} PRIVATE opencv_imgcodecs)
 target_link_libraries(${PROJECT_NAME} PRIVATE opencv_videoio)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_calib3d)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_features2d)
+target_link_libraries(${PROJECT_NAME} PRIVATE opencv_flann)
+
 # 链接 Engine（Eigen 是头文件库，不需要 link）
 # 链接 SymEngine
 target_link_libraries(${PROJECT_NAME} PRIVATE symengine)
@@ -259,6 +266,10 @@ add_dependencies(mylib opencv_imgproc)
 add_dependencies(mylib opencv_highgui)
 add_dependencies(mylib opencv_imgcodecs)
 add_dependencies(mylib opencv_videoio)
+add_dependencies(mylib opencv_calib3d)
+add_dependencies(opencv_calib3d opencv_features2d)
+add_dependencies(opencv_features2d opencv_flann)
+
 
 pretty_print_list("MIAN_SOURCE " MIAN_SOURCE)
 pretty_print_list("MY_INCLUDE_DIRECTORIES List" MY_INCLUDE_DIRECTORIES)
