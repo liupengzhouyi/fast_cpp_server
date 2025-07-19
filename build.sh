@@ -19,15 +19,6 @@ else
   echo "📁 Failed to create external directory. ❌"
 fi
 
-# # 创建include目录
-# if [ -d "src/include" ]; then
-#   echo "📁 Directory 'src/include' already exists. ✅"
-# elif mkdir src/include; then
-#   echo "📁 Successfully created src/include directory. ✅"
-# else
-#   echo "📁 Failed to create src/include directory. ❌"
-# fi
-
 # 创建src目录
 if [ -d "src" ]; then
   echo "📁 Directory 'src' already exists. ✅"
