@@ -6,16 +6,12 @@
 
 #include <spdlog/spdlog.h>
 
-// #include <easylogging++.h>
-// INITIALIZE_EASYLOGGINGPP
-
 #include <nlohmann/json.hpp>
 #include <cpr/cpr.h>
 
 #include "ArgumentParser.h"
 #include "MyLog.h"
 
-// #include "system_healthy.h"
 #include "MySystemHealthyManager.h"
 
 #include "SimpleTcpClient.h"
@@ -23,7 +19,6 @@
 #include "DeviceOnlineMonitor.h"
 
 using namespace tools;
-// using namespace MySystemHealthy;
 using json = nlohmann::json;
 
 int main(int argc, char* argv[]) {
@@ -45,6 +40,10 @@ int main(int argc, char* argv[]) {
             parser.printHelp();
             return 0;
         }
+        if (item.at("key") == "-v" || item.at("key") == "--version") {
+            std::cout << "Version: 1.0.0" << std::endl;
+            return 0;
+        }
     }
 
     MyLog::Init("logs/app.log");  // ✅ 只调用一次
@@ -64,19 +63,6 @@ int main(int argc, char* argv[]) {
 
     std::string json_str = data.dump();
     std::cout << json_str << std::endl;
-
-    // SystemHealthy systemHealthy;
-
-    // if (systemHealthy.checkSystemHealth()) {
-    //     std::cout << "System is healthy." << std::endl;
-    // } else {
-    //     std::cout << "System is not healthy." << std::endl;
-    // }
-
-    // auto report = systemHealthy.getHealthReport();
-    // for (const auto& [key, value] : report) {
-    //     std::cout << key << ": " << value << std::endl;
-    // }
 
     MySystemHealthy::MySystemHealthyManager::GetInstance().Init(5);
 
