@@ -108,10 +108,11 @@ int main(int argc, char* argv[]) {
 
     std::string appName = "fast_cpp_server";
     // std::string defaultLogFilePath = "/var/log/" + appName + "/logs/" + appName + ".log";
-    std::string defaultLogDirPath           = "/home/my/DockerRoot/fast_cpp_server/logs/";
-    std::string defaultINIConfigFilePath    = "/home/my/DockerRoot/fast_cpp_server/config/config.ini";
-    std::string defaultJSONConfigFilePath   = "/home/my/DockerRoot/fast_cpp_server/config/config.json";
-    std::string defaultYAMLConfigFilePath   = "/home/my/DockerRoot/fast_cpp_server/config/config.yaml";
+    std::string rootPath                    = "/workspace/";
+    std::string defaultLogDirPath           = rootPath + "fast_cpp_server/logs/";
+    std::string defaultINIConfigFilePath    = rootPath + "fast_cpp_server/config/config.ini";
+    std::string defaultJSONConfigFilePath   = rootPath + "fast_cpp_server/config/config.json";
+    std::string defaultYAMLConfigFilePath   = rootPath + "fast_cpp_server/config/config.yaml";
     std::string defaultLogFilePath          = defaultLogDirPath + appName + ".log";
     std::string configFilePath              = "";
     std::string logDirPath                  = "";

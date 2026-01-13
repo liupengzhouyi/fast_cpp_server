@@ -141,7 +141,10 @@ add_subdirectory(external/json)
 set(BUILD_MY_CONFIG ON CACHE BOOL "Build my_config library")
 add_subdirectory(src/util/my_config)
 # 添加cpr库
-set(CPR_USE_SYSTEM_CURL ON)
+# 强制使用系统 curl
+set(CPR_USE_SYSTEM_CURL ON CACHE BOOL "" FORCE)
+# CPR 自身
+set(CPR_ENABLE_SSL ON CACHE BOOL "" FORCE)
 add_subdirectory(external/cpr)
 # 添加mosquitto库
 set(DOCUMENTATION OFF CACHE BOOL "Disable documentation generation")
@@ -195,6 +198,30 @@ add_subdirectory(src/util/my_system_healthy)
 # 添加 my_heartbeat 库
 set(BUILD_MY_HEARTBEAT ON CACHE BOOL "Build my_heartbeat library")
 add_subdirectory(src/util/my_heartbeat)
+# 添加 my_cache 库
+set(BUILD_MY_CACHE ON CACHE BOOL "Build my_cache library")
+add_subdirectory(src/util/my_cache)
+# 添加 my_db 库
+set(BUILD_MY_DB ON CACHE BOOL "Build my_db library")
+add_subdirectory(src/util/my_db)
+# 添加 my_edge 库
+set(BUILD_MY_EDGE ON CACHE BOOL "Build my_edge library")
+add_subdirectory(src/util/my_edge)
+# 添加 my_data 库
+set(BUILD_MY_DATA ON CACHE BOOL "Build my_data library")
+add_subdirectory(src/util/my_data)
+# 添加 my_control 库
+set(BUILD_MY_CONTROL ON CACHE BOOL "Build my_control library")
+add_subdirectory(src/util/my_control)
+# 添加 my_comm 库
+set(BUILD_MY_COMM ON CACHE BOOL "Build my_comm library")
+add_subdirectory(src/util/my_comm)
+# 添加 my_ai_interface 库
+set(BUILD_MY_AI_INTERFACE ON CACHE BOOL "Build my_ai_interface library")
+add_subdirectory(src/util/my_ai_interface)
+# 添加 my_network 库
+set(BUILD_MY_NETWORK ON CACHE BOOL "Build my_network library")
+add_subdirectory(src/util/my_network)
 # 添加 mylib 库
 set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage for mylib")
 add_subdirectory(src)
@@ -285,6 +312,11 @@ add_dependencies(mylib my_edge)
 add_dependencies(mylib my_db)
 add_dependencies(mylib my_cache)
 add_dependencies(mylib myconfig)
+add_dependencies(mylib my_comm)
+add_dependencies(mylib my_control)
+add_dependencies(mylib my_network)
+add_dependencies(mylib my_ai_interface)
+add_dependencies(mylib my_data)
 add_dependencies(mylib myproto)
 add_dependencies(mylib my_soft_healthy)
 add_dependencies(mylib libzmq)

@@ -122,7 +122,7 @@ fi
 # 下载yaml-cpp
 if [ -d "external/yaml-cpp" ]; then
   echo "⬇️ Directory 'external/yaml-cpp' already exists. ✅"
-elif git clone https://github.com/jbeder/yaml-cpp.git external/yaml-cpp; then
+elif git submodule add https://github.com/jbeder/yaml-cpp.git external/yaml-cpp; then
   git submodule update --init --recursive
   echo "⬇️ Successfully downloaded YAML-CPP. ✅"
 else

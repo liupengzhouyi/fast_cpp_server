@@ -59,11 +59,11 @@ target_link_libraries(mylib PUBLIC my_db)
 # my_cache
 target_link_libraries(mylib PUBLIC my_cache)
 # my_comm
-# target_link_libraries(mylib PUBLIC my_comm)
-# target_link_libraries(mylib PUBLIC my_control)
-# target_link_libraries(mylib PUBLIC my_network)
-# target_link_libraries(mylib PUBLIC my_ai_interface)
-# target_link_libraries(mylib PUBLIC my_data)
+target_link_libraries(mylib PUBLIC my_comm)
+target_link_libraries(mylib PUBLIC my_control)
+target_link_libraries(mylib PUBLIC my_network)
+target_link_libraries(mylib PUBLIC my_ai_interface)
+target_link_libraries(mylib PUBLIC my_data)
 # myproto
 target_link_libraries(mylib PUBLIC myproto)
 # cpr
