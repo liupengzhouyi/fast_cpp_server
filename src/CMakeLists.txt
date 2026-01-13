@@ -50,6 +50,20 @@ target_link_libraries(mylib PUBLIC protobuf::libprotobuf)
 target_link_libraries(mylib PUBLIC mylog)
 # myconfig
 target_link_libraries(mylib PUBLIC myconfig)
+# my_heartbeat
+target_link_libraries(mylib PUBLIC my_heartbeat)
+# my_edge
+target_link_libraries(mylib PUBLIC my_edge)
+# my_db
+target_link_libraries(mylib PUBLIC my_db)
+# my_cache
+target_link_libraries(mylib PUBLIC my_cache)
+# my_comm
+# target_link_libraries(mylib PUBLIC my_comm)
+# target_link_libraries(mylib PUBLIC my_control)
+# target_link_libraries(mylib PUBLIC my_network)
+# target_link_libraries(mylib PUBLIC my_ai_interface)
+# target_link_libraries(mylib PUBLIC my_data)
 # myproto
 target_link_libraries(mylib PUBLIC myproto)
 # cpr
