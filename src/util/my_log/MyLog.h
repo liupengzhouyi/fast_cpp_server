@@ -21,6 +21,13 @@ void Warn(const std::string& msg);
 void Error(const std::string& msg);
 void Flush();
 
+/**
+ * @brief 启动时归档上一次运行残留的日志文件
+ * @param log_dir 日志目录，如 "logs"
+ * @param archive_dir 归档目录名，默认 "archive"
+ */
+void ArchiveOldLogs(const std::string& log_dir, const std::string& archive_dir = "archive");
+
 // 推荐使用的宏（可输出文件、行号、函数名）
 #define MYLOG_INFO(...) \
     spdlog::log(spdlog::source_loc{__FILE__, __LINE__, __FUNCTION__}, spdlog::level::info, __VA_ARGS__)

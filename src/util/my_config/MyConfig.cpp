@@ -51,3 +51,7 @@ bool MyConfig::Get(const std::string& key, const nlohmann::json& default_value, 
         return false;
     }
 }
+
+const std::string& MyConfig::ShowConfig() const {
+    return config_.dump(4);
+}

@@ -17,6 +17,7 @@ public:
     // Get 返回配置项，如果失败返回默认值，成功返回结果引用
     bool Get(const std::string& key, const nlohmann::json& default_value, const nlohmann::json*& out_value) const;
 
+    const std::string& ShowConfig() const;
 
 private:
     MyConfig() = default;

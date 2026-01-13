@@ -18,7 +18,7 @@ if (BUILD_MY_CONFIG)
     add_library(myconfig STATIC ${MYCONFIG_SOURCES})
     target_include_directories(myconfig PUBLIC ${MYCONFIG_INCLUDE_DIRECTORIES})
 
-    target_link_libraries(myconfig PUBLIC nlohmann_json::nlohmann_json)
+    target_link_libraries(myconfig PUBLIC nlohmann_json::nlohmann_json yaml-cpp)
     print_colored_message("Building my_config library over." COLOR yellow)
     print_colored_message("------------------------------" COLOR magenta)
 else()

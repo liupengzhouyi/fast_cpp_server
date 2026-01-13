@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 3.10)
 message("CMAKE_VERSION: ${CMAKE_VERSION}")
 
 # 项目信息
-project(fast_cpp_server_my)
+# project(fast_cpp_server_my)
+project(consys_uuv_edge)
 
 message("PROJECT_NAME: ${PROJECT_NAME}")
 
@@ -129,6 +130,8 @@ add_subdirectory(external/easyloggingpp)
 set(SPDLOG_BUILD_SHARED OFF)
 # 添加spdlog库
 add_subdirectory(external/spdlog)
+# 添加 yaml-cpp 库
+add_subdirectory(external/yaml-cpp)
 # 添加日志模块
 set(BUILD_MY_LOG ON CACHE BOOL "Build mylog library")
 add_subdirectory(src/util/my_log)
@@ -189,6 +192,9 @@ add_subdirectory(src/util/my_soft_healthy)
 # 添加 my_system_healthy 库
 set(BUILD_MY_SYSTEM_HEALTHY ON CACHE BOOL "Build my_system_healthy library")
 add_subdirectory(src/util/my_system_healthy)
+# 添加 my_heartbeat 库
+set(BUILD_MY_HEARTBEAT ON CACHE BOOL "Build my_heartbeat library")
+add_subdirectory(src/util/my_heartbeat)
 # 添加 mylib 库
 set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage for mylib")
 add_subdirectory(src)
@@ -237,12 +243,14 @@ add_executable(${PROJECT_NAME} ${MIAN_SOURCE} ${SOURCES})
 
 # # 链接spdlog静态库，使用 PRIVATE 关键字
 target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
+target_link_libraries(${PROJECT_NAME} PRIVATE yaml-cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE mylog)
 target_link_libraries(${PROJECT_NAME} PRIVATE myconfig)
 target_link_libraries(${PROJECT_NAME} PRIVATE myproto)
 target_link_libraries(${PROJECT_NAME} PRIVATE my_arg_parser)
 target_link_libraries(${PROJECT_NAME} PRIVATE my_soft_healthy)
 target_link_libraries(${PROJECT_NAME} PRIVATE my_system_healthy)
+target_link_libraries(${PROJECT_NAME} PRIVATE my_heartbeat)
 target_link_libraries(${PROJECT_NAME} PRIVATE mylib)
 # 链接 OpenCV 库
 target_link_libraries(${PROJECT_NAME} PRIVATE opencv_calib3d)
@@ -269,13 +277,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE symengine)
 
 add_dependencies(mylog spdlog::spdlog)
 add_dependencies(mylib mylog)
+add_dependencies(mylib my_heartbeat)
 add_dependencies(mylib myconfig)
 add_dependencies(mylib myproto)
 add_dependencies(mylib my_soft_healthy)
 add_dependencies(mylib libzmq)
+add_dependencies(mylib yaml-cpp)
 add_dependencies(mylib cpr::cpr)
 add_dependencies(mylib nlohmann_json::nlohmann_json)
 add_dependencies(mylib symengine)
+
 # # 依赖 opencv lib
 # add_dependencies(mylib opencv_calib3d)
 # add_dependencies(mylib opencv_core)
@@ -369,19 +380,53 @@ add_custom_target(coverage
 )
 
 # -------------------------------- CPack ------------------------------
-# 启用 CPack 模块
-include(CPack)
-
+# --- 1. 获取 Git Commit ID ---
+find_package(Git QUIET)
+if(GIT_FOUND)
+    # 获取短 Hash (前 7 位)
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_COMMIT_ID
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    # 获取当前分支名称 (可选)
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_BRANCH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+else()
+    set(GIT_COMMIT_ID "unknown")
+    set(GIT_BRANCH "master")
+endif()
+# --- 2. 组合版本号 ---
+# 获取当前时间
+string(TIMESTAMP CURRENT_TIME "%Y-%m-%d_%H:%M:%S")
+# 格式：主版本.次版本.修订号-GitID
+set(MAIN_VERSION "1.0.0")
+# set(FULL_VERSION "${GIT_BRANCH}-${GIT_COMMIT_ID}-${MAIN_VERSION}")
+set(FULL_VERSION "${GIT_BRANCH}-${GIT_COMMIT_ID}")
+# --- 3. 设置 CPack 变量 ---
 # 设置安装包的基本信息
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_VERSION "${FULL_VERSION}")
+set(CPACK_DEBIAN_PACKAGE_VERSION "${FULL_VERSION}") # 如果打 DEB 包
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${FULL_VERSION}-${CURRENT_TIME}")
+# 动态设置打包路径
+set(CPACK_PACKAGE_DIRECTORY "${PROJECT_SOURCE_DIR}/releases")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME} - A high-performance C++ server")
 set(CPACK_PACKAGE_VENDOR "YourCompany")
 set(CPACK_PACKAGE_CONTACT "your_email@example.com")
+set(CPACK_SET_DESTDIR ON)
+set(CPACK_INSTALL_PREFIX "/") # 将安装前缀设为根，配合相对路径使用
+# 启用 CPack 模块
+include(CPack)
 
+set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR};${PROJECT_NAME};ALL;/")
 # 设置安装包的生成格式（如 .tar.gz、.deb、.rpm 等）
-set(CPACK_GENERATOR "TGZ") # 生成 .tar.gz 包
-# 其他可选格式：ZIP、DEB、RPM 等
+set(CPACK_GENERATOR "TGZ") # 生成 .tar.gz 包； # 其他可选格式：ZIP、DEB、RPM 等
 
 # 设置安装路径
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PROJECT_NAME})
@@ -391,12 +436,12 @@ set(SCRIPT_DIRECTORIES ${PROJECT_SOURCE_DIR}/scripts)
 # 把 bin 下的所有文件都装到最终包里
 # install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/ DESTINATION bin)
 # 不再批量拷贝 bin 目录，而是只安装你真正需要的可执行程序
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+install(TARGETS     ${PROJECT_NAME} RUNTIME DESTINATION bin)
 # 如果你的单元测试可执行文件也想打包
-install(TARGETS ${TEST_PROGRAM_NAME} RUNTIME DESTINATION bin)
-install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/ DESTINATION lib)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/config/ DESTINATION config)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/service/ DESTINATION service)
-install(FILES ${SCRIPT_DIRECTORIES}/start.sh DESTINATION .)
-install(FILES ${SCRIPT_DIRECTORIES}/install.sh DESTINATION .)
-install(FILES ${SCRIPT_DIRECTORIES}/uninstall.sh DESTINATION .)
+install(TARGETS     ${TEST_PROGRAM_NAME} RUNTIME DESTINATION bin)
+install(DIRECTORY   ${CMAKE_BINARY_DIR}/lib/ DESTINATION lib)
+install(DIRECTORY   ${PROJECT_SOURCE_DIR}/config/ DESTINATION config)
+install(DIRECTORY   ${PROJECT_SOURCE_DIR}/service/ DESTINATION service)
+install(FILES       ${SCRIPT_DIRECTORIES}/start.sh DESTINATION .)
+install(FILES       ${SCRIPT_DIRECTORIES}/install.sh DESTINATION .)
+install(FILES       ${SCRIPT_DIRECTORIES}/uninstall.sh DESTINATION .)

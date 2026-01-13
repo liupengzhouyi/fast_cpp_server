@@ -2,7 +2,6 @@
 
 A template of cpp server.
 
-
 ### Add tools for cpp porject
 
 * code coverage
@@ -26,7 +25,6 @@ docker run -it --name my_container_name -p 8004:4444 -p 8005:5555 -v /code:/work
 ![file_tree](./images/file_tree.png)
 
 ![file_tree](./images/class_info.png)
-
 
 ## How can I compile binary executable file ?
 
@@ -79,6 +77,13 @@ cd ${PROJECT_ROOT}/scripts
 sh start_server_for_code_dwsign_docment.sh
 
 ```
+
+## Make Package
+
+```shell
+cpack
+```
+
 ## Unit Test
 
 测试可执行程序（如 fast_cpp_server_my_Test）添加参数的方式，运行特定的测试用例或测试套件
@@ -86,9 +91,11 @@ sh start_server_for_code_dwsign_docment.sh
 ✅ 方式一：运行特定测试（用 --gtest_filter=）
 
 示例：只运行某一个具体的测试用例
+
 ```shell
 ./bin/fast_cpp_server_my_Test --gtest_filter=ExampleTest.Add
 ```
+
 示例：运行某个测试套件下的所有用例
 
 ```shell
@@ -114,10 +121,10 @@ sh start_server_for_code_dwsign_docment.sh
 * --gtest_break_on_failure	第一个失败时立即中断（调试用）
 * --gtest_output=xml:report.xml	导出测试结果为 XML
 
-
 ## FQA
 
 * if MQTT con't start, run:
+
 ```shell
 export LD_LIBRARY_PATH=/workspace/build/external/mosquitto/lib:$LD_LIBRARY_PATH
 ```

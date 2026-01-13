@@ -26,7 +26,7 @@ SimpleTcpClient::SimpleTcpClient(const std::string& ip, int port, int maxTimeout
       running_(true),
       connected_(false) {
 
-    spdlog::info("SimpleTcpClient created: {}:{}", ip_, port_);
+    MYLOG_INFO("SimpleTcpClient created: {}:{}", ip_, port_);
     
     // 启动读取网络请求线程
     recvThread_ = std::thread(&SimpleTcpClient::receiveLoop, this);
@@ -55,13 +55,12 @@ bool SimpleTcpClient::readData(std::vector<char>& outData) {
 void SimpleTcpClient::monitorConnection() {
     while (running_) {
         if (!connected_) {
-            spdlog::warn("Not connected, try to connect...");
+            MYLOG_WARN("Not connected, try to connect...");
             if (connectToServer()) {
-                spdlog::info("Connected to server {}:{}", ip_, port_);
                 MYLOG_INFO("Connected to server {}:{}", ip_, port_);
                 connected_ = true;
             } else {
-                spdlog::error("Connect failed, retry in 1s...");
+                MYLOG_ERROR("Connect failed, retry in 1s...");
                 std::this_thread::sleep_for(std::chrono::seconds(1));
             }
         }
@@ -73,7 +72,7 @@ void SimpleTcpClient::monitorConnection() {
 bool SimpleTcpClient::connectToServer() {
     sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd_ < 0) {
-        spdlog::error("Failed to create socket: {}", strerror(errno));
+        MYLOG_ERROR("Failed to create socket: {}", strerror(errno));
         return false;
     }
 
@@ -81,7 +80,7 @@ bool SimpleTcpClient::connectToServer() {
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(port_);
     if (inet_pton(AF_INET, ip_.c_str(), &serverAddr.sin_addr) <= 0) {
-        spdlog::error("Invalid IP address: {}", ip_);
+        MYLOG_ERROR("Invalid IP address: {}", ip_);
         close(sockfd_);
         return false;
     }
@@ -94,7 +93,7 @@ bool SimpleTcpClient::connectToServer() {
     setsockopt(sockfd_, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 
     if (connect(sockfd_, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) < 0) {
-        spdlog::error("Connect : {}", strerror(errno));
+        MYLOG_ERROR("Connect : {}", strerror(errno));
         close(sockfd_);
         return false;
     }
@@ -125,7 +124,7 @@ void SimpleTcpClient::receiveLoop() {
                 connected_ = false;
             } else {
                 // 错误
-                spdlog::error("recv() error: {}", strerror(errno));
+                MYLOG_ERROR("recv() error: {}", strerror(errno));
                 connected_ = false;
             }
         } else {
@@ -139,21 +138,21 @@ bool SimpleTcpClient::sendData(const std::string& data) {
     std::lock_guard<std::mutex> lock(connMutex_); // 加锁，防止多线程同时访问 socketFd_
 
     if (!connected_) {
-        spdlog::error("sendData failed: not connected to server.");
+        MYLOG_ERROR("sendData failed: not connected to server.");
         return false;
     }
 
     ssize_t bytesSent = send(sockfd_, data.data(), data.size(), 0);
     if (bytesSent < 0) {
-        spdlog::error("sendData failed: {}", strerror(errno));
+        MYLOG_ERROR("sendData failed: {}", strerror(errno));
         return false;
     } else if (static_cast<size_t>(bytesSent) < data.size()) {
-        spdlog::warn("sendData partial send: {}/{}", bytesSent, data.size());
+        MYLOG_WARN("sendData partial send: {}/{}", bytesSent, data.size());
         // 这里你可以考虑循环发送剩余部分（更高级），或者简单返回 false
         return false;
     }
 
-    spdlog::info("sendData success: {} bytes", bytesSent);
+    MYLOG_INFO("sendData success: {} bytes", bytesSent);
     return true;
 }
 

@@ -119,6 +119,16 @@ else
   echo "⬇️ Failed to download JSONCPP. ❌"
 fi
 
+# 下载yaml-cpp
+if [ -d "external/yaml-cpp" ]; then
+  echo "⬇️ Directory 'external/yaml-cpp' already exists. ✅"
+elif git submodule add https://github.com/jbeder/yaml-cpp.git external/yaml-cpp; then
+  git submodule update --init --recursive
+  echo "⬇️ Successfully downloaded YAML-CPP. ✅"
+else
+  echo "⬇️ Failed to download YAML-CPP. ❌"
+fi
+
 # 下载nlohmann/json
 if [ -d "external/json" ]; then
   echo "⬇️ Directory 'external/json' already exists. ✅"
@@ -290,4 +300,13 @@ elif mkdir src/protobuf; then
   echo "📁 Successfully created protobuf directory. ✅"
 else
   echo "📁 Failed to create protobuf directory. ❌"
+fi
+
+# 创建 releases 目录
+if [ -d "releases" ]; then
+  echo "📁 Directory 'releases' already exists. ✅"
+elif mkdir releases; then
+  echo "📁 Successfully created releases directory. ✅"
+else
+  echo "📁 Failed to create releases directory. ❌"
 fi
