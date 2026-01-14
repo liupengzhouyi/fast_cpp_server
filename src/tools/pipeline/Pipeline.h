@@ -4,42 +4,15 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 #include <thread>
 #include <atomic>
+#include <map>
 #include <nlohmann/json.hpp>
 #include "MyLog.h"
 
 namespace tools {
 namespace pipeline {
 
-// 终端配置结构
-struct TerminalConfig {
-    int id;
-    std::string ip;
-    int port;
-    bool enabled;
-};
-
-// 具体的连接管道类
-class ConnectionPipe {
-public:
-    explicit ConnectionPipe(const TerminalConfig& config);
-    ~ConnectionPipe();
-
-    void Start();
-    void Stop();
-    int GetId() const { return config_.id; }
-
-private:
-    void WorkLoop();
-
-    TerminalConfig config_;
-    std::unique_ptr<std::thread> worker_thread_;
-    std::atomic<bool> is_running_{false};
-};
-
-// Pipeline 管理类 (单例)
 class Pipeline {
 public:
     static Pipeline& GetInstance() {
@@ -50,20 +23,30 @@ public:
     Pipeline(const Pipeline&) = delete;
     Pipeline& operator=(const Pipeline&) = delete;
 
-    // 根据配置文件初始化并构建管道
+    // 1. 初始化：保存配置并打印日志
     void Init(const nlohmann::json& config);
-    
-    // 启动所有构建好的管道线程
+
+    // 2. 启动：根据 model_name 手动分发到不同的启动函数
     void Start();
-    
-    // 停止并清理
+
+    // 3. 停止：清理所有线程
     void Stop();
 
 private:
-    Pipeline() = default;
+    Pipeline() : is_running_(false) {}
     ~Pipeline();
 
-    std::vector<std::unique_ptr<ConnectionPipe>> pipes_;
+    // 递归日志记录工具
+    void LogJsonParams(const std::string& prefix, const nlohmann::json& j);
+
+    // --- 具体的任务启动逻辑（在这里独立编写每个任务的启动方式） ---
+    void StartHeartbeat(const nlohmann::json& args);
+    void StartComm(const nlohmann::json& args);
+    void StartSystemHealthy(const nlohmann::json& args);
+
+    nlohmann::json full_config_;
+    std::atomic<bool> is_running_;
+    std::vector<std::thread> worker_threads_;
 };
 
 } // namespace pipeline

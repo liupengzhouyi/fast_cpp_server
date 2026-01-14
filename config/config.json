@@ -1,6 +1,47 @@
 {
-        "server": { "host": "localhost", "port": 9999 },
-        "logging": { "file": "test.log", "level": "info" },
-        "my_log_config": { "file_path": "test.log", "level": "info" },
-        "A": {"B": {"c": 1}}
+"server": { "host": "localhost", "port": 9999 },
+"logging": { "file": "test.log", "level": "info" },
+"my_log_config": { "file_path": "test.log", "level": "info" },
+"A": {"B": {"c": 1}},
+"pipeline": {
+    "pipeline": {
+    "execute_node_number": 3,
+    "executes": {
+        "0": {
+        "model_args": {
+            "interval_sec_": 3
+        },
+        "model_name": "heartbeat"
+        },
+        "1": {
+        "model_args": {
+            "interval_sec_": 3
+        },
+        "model_name": "comm"
+        },
+        "2": {
+        "model_args": {
+            "interval_sec_": 3
+        },
+        "model_name": "system_healthy"
+        },
+        "3": {
+        "model_args": {
+            "edges": {
+            "1": {
+                "interface": "/getData",
+                "ip": "127.0.0.1",
+                "name": "wind",
+                "port": 2000
+            }
+            },
+            "edges_number": 1,
+            "interval_sec_": 3
+        },
+        "model_name": "system_healthy"
+        }
     }
+    }
+}
+
+}

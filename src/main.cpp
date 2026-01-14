@@ -118,8 +118,14 @@ int main(int argc, char* argv[]) {
         }}
     };
 
+    // 模拟读取配置文件得到 json 对象
+    nlohmann::json pipelineConfig = {};
+    MyJSONConfig::GetInstance().Get("pipeline", {}, pipelineConfig);
+    MYLOG_INFO("pipeline Config: \n {}", pipelineConfig.dump(2));
+
+
     // 2. 初始化 Pipeline (单例)
-    pipeline::Pipeline::GetInstance().Init(config);
+    pipeline::Pipeline::GetInstance().Init(pipelineConfig);
 
     // 3. 启动所有使能的连接
     pipeline::Pipeline::GetInstance().Start();
