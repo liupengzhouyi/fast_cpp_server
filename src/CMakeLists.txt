@@ -13,6 +13,7 @@ file(GLOB_RECURSE MYLIB_SOURCES
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_queue/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/init_tools/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/free_func/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/tools/pipeline/*.cpp
 )
 
 # 创建静态库 mylib
@@ -27,6 +28,7 @@ set(MYLIB_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_queue
     ${PROJECT_SOURCE_DIR}/src/tools/init_tools
     ${PROJECT_SOURCE_DIR}/src/tools/free_func
+    ${PROJECT_SOURCE_DIR}/src/tools/pipeline
 )
 
 # 头文件路径

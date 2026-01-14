@@ -24,6 +24,7 @@
 
 #include "InitTools.h"
 #include "FreeFunc.h"
+#include "Pipeline.h"
 #include "SimpleTcpClient.h"
 #include "ThreadSafeBuffer.h"
 #include "DeviceOnlineMonitor.h"
@@ -106,6 +107,30 @@ int main(int argc, char* argv[]) {
     free_func::showMyConfig("JSON");
     free_func::showMyConfig("YAML");
 
+    // pipeline::Pipeline::GetInstance().Init(MyJSONConfig::GetInstance().Raw());
+
+    // 1. 模拟或读取配置文件
+    nlohmann::json config = {
+        {"terminals", {
+            {{"id", 101}, {"ip", "192.168.1.10"}, {"port", 5000}, {"enabled", true}},
+            {{"id", 102}, {"ip", "192.168.1.11"}, {"port", 5001}, {"enabled", true}},
+            {{"id", 103}, {"ip", "192.168.1.12"}, {"port", 5002}, {"enabled", false}} // 不会启动
+        }}
+    };
+
+    // 2. 初始化 Pipeline (单例)
+    pipeline::Pipeline::GetInstance().Init(config);
+
+    // 3. 启动所有使能的连接
+    pipeline::Pipeline::GetInstance().Start();
+
+    // 主线程保持运行
+    std::cout << "System is running. Press Enter to exit..." << std::endl;
+    std::cin.get();
+
+    // 4. 停止并清理
+    pipeline::Pipeline::GetInstance().Stop();
+
     auto& hb = HeartbeatManager::Instance();
     nlohmann::json hbConfig = nlohmann::json::object();
     try {
@@ -118,13 +143,6 @@ int main(int argc, char* argv[]) {
     hb.Start();
 
 
-
-
-
-
-
-
-
     bool break_loop = false;
     while (true) {
         // 获取推出信号
@@ -134,16 +152,6 @@ int main(int argc, char* argv[]) {
         } 
         sleep(3);
     }
-    
-
-
-
-
-
-
-
-
-
 
 
     // MYLOG_INFO("Test jsoncpp libary.");
