@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.10)
 message("CMAKE_VERSION: ${CMAKE_VERSION}")
 
 # 项目信息
-# project(fast_cpp_server_my)
-project(consys_uuv_edge)
+project(fast_cpp_server)
+# project(consys_uuv_edge)
 
 message("PROJECT_NAME: ${PROJECT_NAME}")
 
@@ -116,22 +116,24 @@ function(print_colored_message MESSAGE_STRING)
 endfunction()
 
 # 添加protobuf库
+# Protobuf: 明确禁止安装
+set(protobuf_INSTALL OFF CACHE BOOL "Disable protobuf install" FORCE)
 set(protobuf_BUILD_TESTS OFF CACHE BOOL "Disable protobuf tests")
 set(protobuf_USE_EXTERNAL_GTEST OFF CACHE BOOL "Disable external GTest usage")
-add_subdirectory(external/protobuf)
+add_subdirectory(external/protobuf EXCLUDE_FROM_ALL)
 # 假设你生成后的 protoc 可执行文件在 build/bin 目录中
 set(Protobuf_PROTOC_EXECUTABLE $<TARGET_FILE:protoc>)
 # set(Protobuf_PROTOC_EXECUTABLE ${PROJECT_SOURCE_DIR}/build/bin/protoc)
 message(STATUS "Protobuf protoc executable: ${Protobuf_PROTOC_EXECUTABLE}")
-# 添加easyloggingpp库
-set(build_static_lib ON)
-add_subdirectory(external/easyloggingpp)
+# # 添加easyloggingpp库
+# set(build_static_lib ON)
+# add_subdirectory(external/easyloggingpp)
 # 设置spdlog为静态库
 set(SPDLOG_BUILD_SHARED OFF)
 # 添加spdlog库
-add_subdirectory(external/spdlog)
+add_subdirectory(external/spdlog EXCLUDE_FROM_ALL)
 # 添加 yaml-cpp 库
-add_subdirectory(external/yaml-cpp)
+add_subdirectory(external/yaml-cpp EXCLUDE_FROM_ALL)
 # 添加日志模块
 set(BUILD_MY_LOG ON CACHE BOOL "Build mylog library")
 add_subdirectory(src/util/my_log)
@@ -145,13 +147,14 @@ add_subdirectory(src/util/my_config)
 set(CPR_USE_SYSTEM_CURL ON CACHE BOOL "" FORCE)
 # CPR 自身
 set(CPR_ENABLE_SSL ON CACHE BOOL "" FORCE)
-add_subdirectory(external/cpr)
+add_subdirectory(external/cpr EXCLUDE_FROM_ALL)
 # 添加mosquitto库
 set(DOCUMENTATION OFF CACHE BOOL "Disable documentation generation")
-add_subdirectory(external/mosquitto)
+set(WITH_STATIC_LIBRARIES ON CACHE BOOL "" FORCE)
+add_subdirectory(external/mosquitto EXCLUDE_FROM_ALL)
 # 添加libzmq库
 set(WITH_TLS OFF)
-add_subdirectory(external/libzmq)
+add_subdirectory(external/libzmq EXCLUDE_FROM_ALL)
 
 # --------------------- OpenCV 设置 ---------------------
 # 指定需要构建的模块（可按需调整）,
@@ -162,8 +165,13 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libs")
 # opencv contrib 路径（可选）
 set(OPENCV_EXTRA_MODULES_PATH ${CMAKE_SOURCE_DIR}/external/opencv_contrib/modules)
 set(WITH_PROTOBUF OFF CACHE BOOL "Don't use protobuf in OpenCV")
+set(INSTALL_CREATE_DISTRIBUTION OFF CACHE BOOL "" FORCE)
+set(INSTALL_C_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(INSTALL_PYTHON_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(OPENCV_GENERATE_PKGCONFIG OFF CACHE BOOL "" FORCE)
 # 添加 OpenCV 子目录
-add_subdirectory(external/opencv)
+add_subdirectory(external/opencv EXCLUDE_FROM_ALL)
 
 # --------------------- Eigen 设置 ---------------------
 # Eigen 是头文件库，不需要编译，只需添加路径
@@ -181,7 +189,7 @@ set(SYMENGINE_USE_FLINT OFF CACHE BOOL "")
 set(BUILD_TESTS OFF CACHE BOOL "")
 set(BUILD_BENCHMARKS OFF CACHE BOOL "")
 set(BUILD_EXAMPLES OFF CACHE BOOL "")
-add_subdirectory(external/symengine)
+add_subdirectory(external/symengine EXCLUDE_FROM_ALL)
 
 # 添加 myproto 库
 set(BUILD_MY_PROTO ON CACHE BOOL "Build myproto library")
@@ -229,7 +237,7 @@ add_subdirectory(src)
 set(THIRD_INCLUDE_DIRECTORIES 
     ${PROJECT_SOURCE_DIR}/external/spdlog/include
     ${PROJECT_SOURCE_DIR}/external/libzmq/include
-    ${PROJECT_SOURCE_DIR}/external/easyloggingpp/src
+    # ${PROJECT_SOURCE_DIR}/external/easyloggingpp/src
     ${PROJECT_SOURCE_DIR}/external/protobuf/src
     ${PROJECT_SOURCE_DIR}/external/eigen                            # Eigen 是头文件-only
     ${PROJECT_SOURCE_DIR}/external/symengine
@@ -356,6 +364,8 @@ set(TEST_PROGRAM_NAME ${PROJECT_NAME}_Test)
 # find all test source files
 file(GLOB_RECURSE TEST_SOURCES "test/*.cpp")
 # 添加google test库
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+set(INSTALL_GMOCK OFF CACHE BOOL "" FORCE)
 add_subdirectory(external/googletest)
 pretty_print_list("TEST_SOURCES List" TEST_SOURCES)
 # 添加测试
@@ -441,7 +451,7 @@ else()
 endif()
 # --- 2. 组合版本号 ---
 # 获取当前时间
-string(TIMESTAMP CURRENT_TIME "%Y-%m-%d_%H:%M:%S")
+string(TIMESTAMP CURRENT_TIME "%Y%m%d_%H%M%S")
 # 格式：主版本.次版本.修订号-GitID
 set(MAIN_VERSION "1.0.0")
 # set(FULL_VERSION "${GIT_BRANCH}-${GIT_COMMIT_ID}-${MAIN_VERSION}")
@@ -458,7 +468,47 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME} - A high-performance C++ 
 set(CPACK_PACKAGE_VENDOR "YourCompany")
 set(CPACK_PACKAGE_CONTACT "your_email@example.com")
 set(CPACK_SET_DESTDIR ON)
-set(CPACK_INSTALL_PREFIX "/") # 将安装前缀设为根，配合相对路径使用
+set(CPACK_INSTALL_PREFIX "/")   # 将安装前缀设为根，配合相对路径使用
+set(CPACK_STRIP_FILES ON)       # 安装包中去除符号表，减小体积
+
+# -------------------------------- CPack 强力清理 ------------------------------
+
+# 使用正则排除不需要的文件/目录
+# 注意：Regex 匹配的是安装后的相对路径
+set(CPACK_INSTALL_IGNORED_FILES
+    # 1. 排除所有头文件目录 (你的程序运行不需要 include)
+    "/include/"
+    
+    # 2. 排除所有静态库 (.a) -> 你的 bin 已经静态链接了它们
+    "\\\\.a$"
+    
+    # 3. 排除 cmake 和 pkgconfig 配置目录
+    "/lib/cmake/"
+    "/lib/pkgconfig/"
+    "/share/pkgconfig/"
+    
+    # 4. 排除文档和无关数据
+    "/share/doc/"
+    "/share/man/"
+    "/share/opencv4/"
+    "/share/zmq/"
+    "/share/licenses/"
+    
+    # 5. 排除不需要的 OpenCV/Mosquitto/ZMQ 工具 (保留你自己的 bin)
+    "/bin/opencv_"
+    "/bin/mosquitto_"
+    "/bin/protoc"
+    "/bin/inproc_"  # 如果这些是你不需要的 ZMQ 测试工具
+    "/bin/local_"
+    "/bin/remote_"
+    "/bin/proxy_"
+    "/setup_vars_opencv4.sh"
+    
+    # 6. 排除 /usr/local 这种奇怪的绝对路径残留
+    "^/usr/"
+)
+
+# -----------------------------------------------------------------------------
 # 启用 CPack 模块
 include(CPack)
 
@@ -470,16 +520,24 @@ set(CPACK_GENERATOR "TGZ") # 生成 .tar.gz 包； # 其他可选格式：ZIP、
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PROJECT_NAME})
 set(SCRIPT_DIRECTORIES ${PROJECT_SOURCE_DIR}/scripts)
 
-# 包含必要的文件
-# 把 bin 下的所有文件都装到最终包里
-# install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/ DESTINATION bin)
-# 不再批量拷贝 bin 目录，而是只安装你真正需要的可执行程序
-install(TARGETS     ${PROJECT_NAME} RUNTIME DESTINATION bin)
-# 如果你的单元测试可执行文件也想打包
-install(TARGETS     ${TEST_PROGRAM_NAME} RUNTIME DESTINATION bin)
-install(DIRECTORY   ${CMAKE_BINARY_DIR}/lib/ DESTINATION lib)
-install(DIRECTORY   ${PROJECT_SOURCE_DIR}/config/ DESTINATION config)
-install(DIRECTORY   ${PROJECT_SOURCE_DIR}/service/ DESTINATION service)
+
+# 1. 安装主程序
+install(TARGETS     ${PROJECT_NAME}      RUNTIME    DESTINATION bin)
+# 2. (可选) 安装单元测试程序 - 生产环境建议注释掉
+install(TARGETS     ${TEST_PROGRAM_NAME} RUNTIME    DESTINATION bin)
+# 3. 安装配置目录
+install(DIRECTORY   ${PROJECT_SOURCE_DIR}/config/   DESTINATION config)
+install(DIRECTORY   ${PROJECT_SOURCE_DIR}/service/  DESTINATION service)
+# 4. 安装脚本
 install(FILES       ${SCRIPT_DIRECTORIES}/start.sh DESTINATION .)
 install(FILES       ${SCRIPT_DIRECTORIES}/install.sh DESTINATION .)
 install(FILES       ${SCRIPT_DIRECTORIES}/uninstall.sh DESTINATION .)
+# 5. [关键] 仅安装运行时必须的动态库 (.so)
+# install(DIRECTORY   ${CMAKE_BINARY_DIR}/lib/ DESTINATION lib)
+if(TARGET libzmq)
+    install(FILES $<TARGET_FILE:libzmq> DESTINATION lib)
+endif()
+
+if(TARGET libmosquitto)
+    install(FILES $<TARGET_FILE:libmosquitto> DESTINATION lib)
+endif()

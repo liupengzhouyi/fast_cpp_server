@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <sstream>
 #include <iostream>
-
+#include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace MyLog {
 
@@ -103,29 +103,35 @@ void Init(const std::string& log_file, size_t max_file_size, size_t max_files) {
     std::cout << "日志目录: " << log_dir.string() << std::endl;
     // ② 启动前归档
     ArchiveOldLogs(log_dir.string(), archive_dir, logInfos);
-
+    
     // 异步线程池初始化
-    spdlog::init_thread_pool(8192, 1);  // 队列大小、线程数
+    spdlog::init_thread_pool(8192, 1);
 
-    // 创建 rotating file sink（滚动文件）
-    auto sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
+    // 1. 创建文件输出 Sink
+    auto file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
         log_file, max_file_size, max_files);
 
-    // 创建异步 logger
+    // 2. 创建终端输出 Sink (带颜色)
+    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    console_sink->set_level(spdlog::level::debug); // 可以单独设置终端显示的级别
+
+    // 3. 组合两个 Sinks
+    std::vector<spdlog::sink_ptr> sinks {file_sink, console_sink};
+
+    // 4. 创建异步 logger，传入 sinks 列表
     logger = std::make_shared<spdlog::async_logger>(
-        "async_logger", sink,
+        "async_logger", sinks.begin(), sinks.end(),
         spdlog::thread_pool(), spdlog::async_overflow_policy::block);
 
+    // 设置为默认 logger
     spdlog::set_default_logger(logger);
 
-    // 设置输出格式（包含文件名、行号、函数名）
+    // 设置全局格式
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%s:%# %!] %v");
-
-    // 设置日志等级
     spdlog::set_level(spdlog::level::debug);
-    spdlog::flush_on(spdlog::level::info);  // 自动 flush
+    spdlog::flush_on(spdlog::level::info);
 
-    for(const std::string logItem : logInfos) {
+    for(const std::string& logItem : logInfos) {
         MYLOG_INFO(logItem);
     }
 }

@@ -1,4 +1,5 @@
 #include "MyJSONConfig.h"
+#include <iostream>
 #include <fstream>
 
 MyJSONConfig* MyJSONConfig::instance_ = nullptr;
@@ -29,11 +30,17 @@ bool MyJSONConfig::Load(const std::string& path) {
 bool MyJSONConfig::Get(const std::string& key,
                        const nlohmann::json& def,
                        nlohmann::json& out) const {
-    if (!config_.contains(key)) {
+    try {
+        if (config_.is_null()) {
+            out = def;
+            return false;
+        }
+        out = config_[key];
+    } catch (...) {
+        std::cout << "[MyJSONConfig] Get key exception: " << key << std::endl;
         out = def;
         return false;
     }
-    out = config_[key];
     return true;
 }
 

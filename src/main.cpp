@@ -22,6 +22,8 @@
 // #include "system_healthy.h"
 #include "MySystemHealthyManager.h"
 
+#include "InitTools.h"
+#include "FreeFunc.h"
 #include "SimpleTcpClient.h"
 #include "ThreadSafeBuffer.h"
 #include "DeviceOnlineMonitor.h"
@@ -30,109 +32,64 @@ using namespace tools;
 // using namespace MySystemHealthy;
 using json = nlohmann::json;
 
-bool initLoadConfig(const std::string& type_,
-                    const std::string& config_file_path,
-                    std::vector<std::string>& logInfos)
-{
-    bool load_ok = false;
-
-    auto tryLoad = [&](const std::string& name, auto&& initFunc, auto&& showFunc) -> bool {
-        try {
-            initFunc();
-            logInfos.emplace_back("[Config] " + name + " 配置加载成功");
-            MYLOG_DEBUG("{} Config:\n{}", name, showFunc());
-            return true;
-        } catch (const std::exception& e) {
-            logInfos.emplace_back("[Config] " + name + " 配置加载失败: " + e.what());
-        } catch (...) {
-            logInfos.emplace_back("[Config] " + name + " 配置加载失败: unknown exception");
-        }
-        return false;
-    };
-
-    // ========== INI ==========
-    if (type_ == "ini" || type_ == "all") {
-        load_ok |= tryLoad(
-            "INI",
-            [&]() { MyINIConfig::Init(config_file_path); },
-            [&]() { return MyINIConfig::GetInstance().ShowConfig(); }
-        );
-    }
-
-    // ========== JSON ==========
-    if (type_ == "json" || type_ == "all") {
-        load_ok |= tryLoad(
-            "JSON",
-            [&]() { MyJSONConfig::Init(config_file_path); },
-            [&]() { return MyJSONConfig::GetInstance().ShowConfig(); }
-        );
-    }
-
-    // ========== YAML ==========
-    if (type_ == "yaml" || type_ == "all") {
-        load_ok |= tryLoad(
-            "YAML",
-            [&]() { MyYAMLConfig::Init(config_file_path); },
-            [&]() { return MyYAMLConfig::GetInstance().ShowConfig(); }
-        );
-    }
-
-    if (!load_ok) {
-        logInfos.emplace_back("[Config] ❌ 所有配置加载失败");
-    }
-
-    return load_ok;
-}
 
 
 int main(int argc, char* argv[]) {
 
+    std::string appName                     = "fast_cpp_server";
+    std::string defaultINIConfigFilePath    = "/etc/fast_cpp_server/config.ini";
+    std::string defaultJSONConfigFilePath   = "/etc/fast_cpp_server/config.json";
+    std::string defaultYAMLConfigFilePath   = "/etc/fast_cpp_server/config.yaml";
+    std::string defaultLogDirPath           = "/var/fast_cpp_server/logs/";
+    std::string defaultLogFilePath          = defaultLogDirPath + appName + ".log";
+    std::string configFilePath              = defaultINIConfigFilePath;
+    std::string logDirPath                  = defaultLogDirPath;
+    std::string logFilePath                 = defaultLogFilePath;
+    std::vector<std::string> logInfos       = {};
+
     ArgumentParser parser;
-    parser.addOption("-h", "--help", "Show help info");
+    parser.addOption("-h", "--help",    "Show help info");
     parser.addOption("-v", "--version", "Show version info");
-    parser.addOption("-c", "--config", "Set config file", true);
+    parser.addOption("-c", "--config",  "Set config file", true);
 
-    auto args = parser.parse(argc, argv);
-
-    // 如果存在 help 参数就打印帮助
+    std::vector<std::map<std::string, std::string>> args = parser.parse(argc, argv);
     for (const auto& item : args) {
         if (item.at("key") == "-h" || item.at("key") == "--help") {
             parser.printHelp();
             return 0;
-        }
-        if (item.at("key") == "-v" || item.at("key") == "--version") {
+        } else if (item.at("key") == "-v" || item.at("key") == "--version") {
             std::cout << "App Version: 1.0.0" << std::endl;
             return 0;
+        } else if (item.at("key") == "-c" || item.at("key") == "--config") {
+            init_tools::loadConfigFromArguments(args, logInfos, configFilePath);
+        } else {
+            // Unknown argument, can log or ignore
         }
     }
 
-    std::string appName = "fast_cpp_server";
-    // std::string defaultLogFilePath = "/var/log/" + appName + "/logs/" + appName + ".log";
-    std::string rootPath                    = "/workspace/";
-    std::string defaultLogDirPath           = rootPath + "fast_cpp_server/logs/";
-    std::string defaultINIConfigFilePath    = rootPath + "fast_cpp_server/config/config.ini";
-    std::string defaultJSONConfigFilePath   = rootPath + "fast_cpp_server/config/config.json";
-    std::string defaultYAMLConfigFilePath   = rootPath + "fast_cpp_server/config/config.yaml";
-    std::string defaultLogFilePath          = defaultLogDirPath + appName + ".log";
-    std::string configFilePath              = "";
-    std::string logDirPath                  = "";
-    std::string logFilePath                 = "";
-
-    std::vector<std::string> logInfos = {};
     // 加载配置文件
-    bool load_ini_config_status  = initLoadConfig("ini",  defaultINIConfigFilePath,  logInfos);
-    bool load_json_config_status = initLoadConfig("json", defaultJSONConfigFilePath, logInfos);
-    bool load_yaml_config_status = initLoadConfig("yaml", defaultYAMLConfigFilePath, logInfos);
-
-    MyINIConfig::GetInstance().GetString("app_name", appName, appName);
-    MyINIConfig::GetInstance().GetString("logger_dir", defaultLogDirPath, logDirPath);
-    logFilePath = logDirPath + appName + ".log";
-    std::cout << "Log file path: " << logFilePath << std::endl;
+    bool load_ini_config_status  = init_tools::initLoadConfig("ini",  configFilePath,  logInfos);
+    bool load_json_config_status = init_tools::initLoadConfig("json", defaultJSONConfigFilePath, logInfos);
+    bool load_yaml_config_status = init_tools::initLoadConfig("yaml", defaultYAMLConfigFilePath, logInfos);
 
     // 初始化日志系统
+    if (!free_func::loadLogConfigFromINIConfig(logInfos, logDirPath, logFilePath, appName)) {
+        logDirPath = defaultLogDirPath;
+        logFilePath = logDirPath + appName + ".log";
+        std::cout << "[LogConfig] 使用默认日志目录: " << logDirPath << std::endl;
+    }
     MyLog::Init(logFilePath);  // ✅ 只调用一次
+    
+    MYLOG_INFO("----------------------------------- Init Log -------------------------");
+    if (!free_func::checkConfigLoadStatus(load_ini_config_status, load_json_config_status, load_yaml_config_status)) {
+        MYLOG_ERROR("配置加载失败，程序退出.");
+        return -1;
+    }
+    for (std::string& logItem : logInfos) {
+        MYLOG_INFO(logItem);
+    }
     MYLOG_INFO("----------------------------------------------------------------------");
-    MYLOG_INFO("Hello World!");
+    free_func::logWelcomeMessage();
     MYLOG_INFO("App is starting...");
     MYLOG_INFO(" * defaultINIConfigFilePath: {}", defaultINIConfigFilePath);
     MYLOG_INFO(" * defaultJSONConfigFilePath: {}", defaultJSONConfigFilePath);
@@ -144,17 +101,19 @@ int main(int argc, char* argv[]) {
         MYLOG_INFO("* Arg: {}, Value: {}", item.at("key"), item.at("value"));
     }
     MYLOG_INFO("----------------------------------------------------------------------");
-    for (std::string& logItem : logInfos) {
-        MYLOG_INFO(logItem);
-    }
-    if (!load_ini_config_status)  { MYLOG_ERROR("加载INI配置失败");     }
-    if (!load_json_config_status) { MYLOG_ERROR("加载JSON配置失败");    }
-    if (!load_yaml_config_status) { MYLOG_ERROR("加载YAML配置失败");    }
 
+    free_func::showMyConfig("INI");
+    free_func::showMyConfig("JSON");
+    free_func::showMyConfig("YAML");
 
     auto& hb = HeartbeatManager::Instance();
-    nlohmann::json hbConfig = {};
-    MyJSONConfig::GetInstance().Get("heartbeat", nlohmann::json::object(), hbConfig);
+    nlohmann::json hbConfig = nlohmann::json::object();
+    try {
+        MyJSONConfig::GetInstance().Get("heartbeat", nlohmann::json::object(), hbConfig);
+        MYLOG_INFO("获取 heartbeat 配置成功: {}", hbConfig.dump());
+    } catch (const std::exception& e) {
+        MYLOG_ERROR("获取 heartbeat 配置异常: {}", e.what());
+    }
     hb.Init(hbConfig);
     hb.Start();
 
@@ -166,6 +125,16 @@ int main(int argc, char* argv[]) {
 
 
 
+    bool break_loop = false;
+    while (true) {
+        // 获取推出信号
+        
+        if (break_loop) {
+            break;
+        } 
+        sleep(3);
+    }
+    
 
 
 
@@ -177,21 +146,16 @@ int main(int argc, char* argv[]) {
 
 
 
+    // MYLOG_INFO("Test jsoncpp libary.");
+    // json data = json::parse(R"({"key": "value"})");
+    // std::string value = data["key"];
+    // data["new_item_01"] = 1;
+    // data["new_item_02"] = std::vector<int>{1, 2, 3, 4};
+    // // std::shared_ptr<std::vector<int>> ptr = std::make_shared<std::vector<int>>({1, 2, 3, 4});
+    // // data["new_item_03"] = ptr;
 
-
-
-
-
-    MYLOG_INFO("Test jsoncpp libary.");
-    json data = json::parse(R"({"key": "value"})");
-    std::string value = data["key"];
-    data["new_item_01"] = 1;
-    data["new_item_02"] = std::vector<int>{1, 2, 3, 4};
-    // std::shared_ptr<std::vector<int>> ptr = std::make_shared<std::vector<int>>({1, 2, 3, 4});
-    // data["new_item_03"] = ptr;
-
-    std::string json_str = data.dump();
-    std::cout << json_str << std::endl;
+    // std::string json_str = data.dump();
+    // std::cout << json_str << std::endl;
 
     // SystemHealthy systemHealthy;
 
@@ -208,19 +172,19 @@ int main(int argc, char* argv[]) {
 
     MySystemHealthy::MySystemHealthyManager::GetInstance().Init(5);
 
-    cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/users/octocat"});
+    // cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/users/octocat"});
 
-    // 检查请求是否成功
-    if (r.status_code == 200) {
-        // 输出响应内容
-        std::cout << "Request successful!" << std::endl;
-        std::cout << "Status code: " << r.status_code << std::endl;
-        std::cout << "Response body: " << r.text << std::endl;
-    } else {
-        // 输出错误信息
-        std::cout << "Request failed with status code: " << r.status_code << std::endl;
-        std::cout << "Error message: " << r.error.message << std::endl;
-    }
+    // // 检查请求是否成功
+    // if (r.status_code == 200) {
+    //     // 输出响应内容
+    //     std::cout << "Request successful!" << std::endl;
+    //     std::cout << "Status code: " << r.status_code << std::endl;
+    //     std::cout << "Response body: " << r.text << std::endl;
+    // } else {
+    //     // 输出错误信息
+    //     std::cout << "Request failed with status code: " << r.status_code << std::endl;
+    //     std::cout << "Error message: " << r.error.message << std::endl;
+    // }
 
     std::string ip = "192.168.1.230";
     int port = 3000;
@@ -246,7 +210,7 @@ int main(int argc, char* argv[]) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
-    monitor.stop();
+
 
     while (true)
     {
@@ -262,7 +226,9 @@ int main(int argc, char* argv[]) {
         // }
     }
 
+
     // 程序退出前
+    monitor.stop();
     hb.Stop();
 
     return 0;

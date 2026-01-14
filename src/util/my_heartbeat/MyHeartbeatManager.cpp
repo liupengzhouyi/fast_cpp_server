@@ -1,5 +1,6 @@
 #include "MyHeartbeatManager.h"
 #include <unistd.h>
+#include <iostream>
 #include <ctime>
 #include "MyLog.h"
 
@@ -11,8 +12,15 @@ HeartbeatManager& HeartbeatManager::Instance() {
 
 void HeartbeatManager::Init(const nlohmann::json& config) {
     config_ = config;
-    interval_sec_ = config.value("interval_sec", 5);
+    interval_sec_ = 5; // 如果不是对象，使用硬编码默认值
+    try {
+        interval_sec_ = config.value("interval_sec", 5);
+        std::cout << "[HeartbeatManager] Config: " << config.dump(2) << std::endl;
+    } catch (const std::exception& e) {
+        std::cout << "[HeartbeatManager] Failed to get interval_sec from global config: " << e.what() << std::endl;
+    }
     start_time_ = time(nullptr);
+    MYLOG_INFO("HeartbeatManager initialized with interval: {} seconds", interval_sec_);
 }
 
 void HeartbeatManager::Start() {

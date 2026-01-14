@@ -4,13 +4,15 @@ Description=fast_cpp_server Service                             # 服务的描�
 After=network.target                                            # 服务启动的依赖项，表示在网络服务启动后再启动此服务
 
 [Service]
+# 以 root 用户和组运行
+User=root
+Group=root
+
 # 服务的类型，simple 表示服务会一直运行，ExecStart 启动的进程是主进程
 Type=simple
 
 # 服务启动时执行的命令
 ExecStart=/usr/local/bin/fast_cpp_server
-# 服务停止时执行的命令
-# ExecStop=/home/cs/DockerRoot/fast_cpp_server/start.sh stop    # 停止脚本路径
 
 # 服务崩溃或退出时自动重启
 Restart=always
@@ -19,7 +21,14 @@ Restart=always
 Environment=LD_LIBRARY_PATH=/usr/local/lib/fast_cpp_server:$LD_LIBRARY_PATH
 
 # 设置服务的工作目录
-WorkingDirectory=/tmp/fast_cpp_server
+WorkingDirectory=/usr/local/bin
+
+# 核心：自动创建运行时目录
+# 这会自动创建 /run/fast_cpp_server，权限归 root
+RuntimeDirectory=fast_cpp_server
+
+# 增强权限（防止某些系统限制 root 写入 /var）
+ReadWritePaths=/var/fast_cpp_server /var/log/fast_cpp_server
 
 [Install]
 # 指定服务的目标，multi-user.target 表示服务将在多用户模式下启动

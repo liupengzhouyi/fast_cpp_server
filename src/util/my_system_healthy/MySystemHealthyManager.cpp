@@ -28,7 +28,7 @@ void MySystemHealthyManager::Init(int update_interval_sec) {
   if (running_) return;
   running_ = true;
   worker_ = std::thread(&MySystemHealthyManager::WorkerLoop, this);
-  MYLOG_INFO("MySystemHealthyManager started with interval: %d sec", interval_sec_);
+  MYLOG_INFO("MySystemHealthyManager started with interval: {} sec", interval_sec_);
 }
 
 void MySystemHealthyManager::Shutdown() {
