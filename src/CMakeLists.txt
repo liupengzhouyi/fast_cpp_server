@@ -9,8 +9,8 @@ file(GLOB_RECURSE MYLIB_SOURCES
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_buffer/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/ping_tools/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/example/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/tools/monitor/device_online_monitor/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_queue/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/tools/service_guard/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/init_tools/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/free_func/*.cpp
     ${PROJECT_SOURCE_DIR}/src/tools/pipeline/*.cpp
@@ -24,8 +24,8 @@ set(MYLIB_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_buffer
     ${PROJECT_SOURCE_DIR}/src/tools/ping_tools
     ${PROJECT_SOURCE_DIR}/src/tools/example
-    ${PROJECT_SOURCE_DIR}/src/tools/monitor/device_online_monitor
     ${PROJECT_SOURCE_DIR}/src/tools/thread_safe_queue
+    ${PROJECT_SOURCE_DIR}/src/tools/service_guard
     ${PROJECT_SOURCE_DIR}/src/tools/init_tools
     ${PROJECT_SOURCE_DIR}/src/tools/free_func
     ${PROJECT_SOURCE_DIR}/src/tools/pipeline

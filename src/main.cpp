@@ -28,6 +28,7 @@
 #include "SimpleTcpClient.h"
 #include "ThreadSafeBuffer.h"
 #include "DeviceOnlineMonitor.h"
+#include "ServiceGuard.h"
 
 using namespace tools;
 // using namespace MySystemHealthy;
@@ -47,11 +48,13 @@ int main(int argc, char* argv[]) {
     std::string logDirPath                  = defaultLogDirPath;
     std::string logFilePath                 = defaultLogFilePath;
     std::vector<std::string> logInfos       = {};
+    bool is_hard_setup                      = false; // 是否强制自检
 
     ArgumentParser parser;
     parser.addOption("-h", "--help",    "Show help info");
     parser.addOption("-v", "--version", "Show version info");
-    parser.addOption("-c", "--config",  "Set config file", true);
+    parser.addOption("-s", "--setup",   "Setup mode",       true);
+    parser.addOption("-c", "--config",  "Set config file",  true);
 
     std::vector<std::map<std::string, std::string>> args = parser.parse(argc, argv);
     for (const auto& item : args) {
@@ -61,20 +64,32 @@ int main(int argc, char* argv[]) {
         } else if (item.at("key") == "-v" || item.at("key") == "--version") {
             std::cout << "App Version: 1.0.0" << std::endl;
             return 0;
+        } else if (item.at("key") == "-s" || item.at("key") == "--setup") {
+            std::cout << "Setup mode activated: mode:" << item.at("value") << std::endl;
+            std::string value = item.at("value");
+            if (value == "hard" || value == "true" || value == "1") {
+                is_hard_setup = true;
+                std::cout << "Hard setup mode activated." << std::endl;
+                logInfos.emplace_back("Hard setup mode activated.");
+            } else {
+                std::cout << "Normal setup mode activated." << std::endl;
+                logInfos.emplace_back("Normal setup mode activated.");
+            }
+            tools::service_guard::ServiceGuard::GetInstance().Execute(is_hard_setup);       // 执行服务自检
         } else if (item.at("key") == "-c" || item.at("key") == "--config") {
-            init_tools::loadConfigFromArguments(args, logInfos, configFilePath);
+            tools::init_tools::loadConfigFromArguments(args, logInfos, configFilePath);
         } else {
             // Unknown argument, can log or ignore
         }
     }
 
     // 加载配置文件
-    bool load_ini_config_status  = init_tools::initLoadConfig("ini",  configFilePath,  logInfos);
-    bool load_json_config_status = init_tools::initLoadConfig("json", defaultJSONConfigFilePath, logInfos);
-    bool load_yaml_config_status = init_tools::initLoadConfig("yaml", defaultYAMLConfigFilePath, logInfos);
+    bool load_ini_config_status  = tools::init_tools::initLoadConfig("ini",  configFilePath,  logInfos);
+    bool load_json_config_status = tools::init_tools::initLoadConfig("json", defaultJSONConfigFilePath, logInfos);
+    bool load_yaml_config_status = tools::init_tools::initLoadConfig("yaml", defaultYAMLConfigFilePath, logInfos);
 
     // 初始化日志系统
-    if (!free_func::loadLogConfigFromINIConfig(logInfos, logDirPath, logFilePath, appName)) {
+    if (!tools::free_func::loadLogConfigFromINIConfig(logInfos, logDirPath, logFilePath, appName)) {
         logDirPath = defaultLogDirPath;
         logFilePath = logDirPath + appName + ".log";
         std::cout << "[LogConfig] 使用默认日志目录: " << logDirPath << std::endl;
@@ -82,7 +97,7 @@ int main(int argc, char* argv[]) {
     MyLog::Init(logFilePath);  // ✅ 只调用一次
     
     MYLOG_INFO("----------------------------------- Init Log -------------------------");
-    if (!free_func::checkConfigLoadStatus(load_ini_config_status, load_json_config_status, load_yaml_config_status)) {
+    if (!tools::free_func::checkConfigLoadStatus(load_ini_config_status, load_json_config_status, load_yaml_config_status)) {
         MYLOG_ERROR("配置加载失败，程序退出.");
         return -1;
     }
@@ -90,7 +105,7 @@ int main(int argc, char* argv[]) {
         MYLOG_INFO(logItem);
     }
     MYLOG_INFO("----------------------------------------------------------------------");
-    free_func::logWelcomeMessage();
+    tools::free_func::logWelcomeMessage();
     MYLOG_INFO("App is starting...");
     MYLOG_INFO(" * defaultINIConfigFilePath: {}", defaultINIConfigFilePath);
     MYLOG_INFO(" * defaultJSONConfigFilePath: {}", defaultJSONConfigFilePath);
@@ -103,9 +118,9 @@ int main(int argc, char* argv[]) {
     }
     MYLOG_INFO("----------------------------------------------------------------------");
 
-    free_func::showMyConfig("INI");
-    free_func::showMyConfig("JSON");
-    free_func::showMyConfig("YAML");
+    tools::free_func::showMyConfig("INI");
+    tools::free_func::showMyConfig("JSON");
+    tools::free_func::showMyConfig("YAML");
 
     // pipeline::Pipeline::GetInstance().Init(MyJSONConfig::GetInstance().Raw());
 
@@ -122,42 +137,43 @@ int main(int argc, char* argv[]) {
     nlohmann::json pipelineConfig = {};
     MyJSONConfig::GetInstance().Get("pipeline", {}, pipelineConfig);
     MYLOG_INFO("pipeline Config: \n {}", pipelineConfig.dump(2));
+    MYLOG_INFO("======================================================================");
 
 
     // 2. 初始化 Pipeline (单例)
-    pipeline::Pipeline::GetInstance().Init(pipelineConfig);
+    tools::pipeline::Pipeline::GetInstance().Init(pipelineConfig);
 
     // 3. 启动所有使能的连接
-    pipeline::Pipeline::GetInstance().Start();
+    tools::pipeline::Pipeline::GetInstance().Start();
 
     // 主线程保持运行
     std::cout << "System is running. Press Enter to exit..." << std::endl;
     std::cin.get();
 
     // 4. 停止并清理
-    pipeline::Pipeline::GetInstance().Stop();
+    tools::pipeline::Pipeline::GetInstance().Stop();
 
-    auto& hb = HeartbeatManager::Instance();
-    nlohmann::json hbConfig = nlohmann::json::object();
-    try {
-        MyJSONConfig::GetInstance().Get("heartbeat", nlohmann::json::object(), hbConfig);
-        MYLOG_INFO("获取 heartbeat 配置成功: {}", hbConfig.dump());
-    } catch (const std::exception& e) {
-        MYLOG_ERROR("获取 heartbeat 配置异常: {}", e.what());
-    }
-    hb.Init(hbConfig);
-    hb.Start();
+    // auto& hb = HeartbeatManager::Instance();
+    // nlohmann::json hbConfig = nlohmann::json::object();
+    // try {
+    //     MyJSONConfig::GetInstance().Get("heartbeat", nlohmann::json::object(), hbConfig);
+    //     MYLOG_INFO("获取 heartbeat 配置成功: {}", hbConfig.dump());
+    // } catch (const std::exception& e) {
+    //     MYLOG_ERROR("获取 heartbeat 配置异常: {}", e.what());
+    // }
+    // hb.Init(hbConfig);
+    // hb.Start();
 
 
-    bool break_loop = false;
-    while (true) {
-        // 获取推出信号
+    // bool break_loop = false;
+    // while (true) {
+    //     // 获取推出信号
         
-        if (break_loop) {
-            break;
-        } 
-        sleep(3);
-    }
+    //     if (break_loop) {
+    //         break;
+    //     } 
+    //     sleep(3);
+    // }
 
 
     // MYLOG_INFO("Test jsoncpp libary.");
@@ -243,7 +259,7 @@ int main(int argc, char* argv[]) {
 
     // 程序退出前
     monitor.stop();
-    hb.Stop();
+    // hb.Stop();
 
     return 0;
 }

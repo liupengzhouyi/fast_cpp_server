@@ -3,7 +3,9 @@
 #include <iostream>
 #include <ctime>
 #include "MyLog.h"
+#include "MyEdgeManager.h"
 
+using namespace edge;
 
 HeartbeatManager& HeartbeatManager::Instance() {
     static HeartbeatManager inst;
@@ -59,14 +61,20 @@ nlohmann::json HeartbeatManager::BuildHeartbeat() const {
     heartbeat["base"] = base;
     heartbeat["extra"] = config_.value("extra", nlohmann::json::object());
 
+    nlohmann::json edgeData = edge::MyEdgeManager::GetInstance().ShowEdgesStatus();
+    heartbeat["edge_devices"] = edgeData;
+
     return {{"heartbeat", heartbeat}};
 }
 
 void HeartbeatManager::SendHeartbeat(const nlohmann::json& data) {
     std::string sender = config_.value("sender", "log");
-
     if (sender == "log") {
-        MYLOG_INFO("Heartbeat:\n{}", data.dump(2));
+        if (simple_json4log) {
+            MYLOG_INFO("Heartbeat: {}", data["heartbeat"].dump());
+        } else {
+            MYLOG_INFO("Heartbeat Data: {}", data.dump(4));
+        }
     }
     // http / mqtt 可在此扩展
 }

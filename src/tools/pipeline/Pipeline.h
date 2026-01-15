@@ -6,7 +6,6 @@
 #include <vector>
 #include <thread>
 #include <atomic>
-#include <map>
 #include <nlohmann/json.hpp>
 #include "MyLog.h"
 
@@ -23,30 +22,32 @@ public:
     Pipeline(const Pipeline&) = delete;
     Pipeline& operator=(const Pipeline&) = delete;
 
-    // 1. 初始化：保存配置并打印日志
+    // 初始化：读取你提供的具体 JSON 结构并记录日志
     void Init(const nlohmann::json& config);
 
-    // 2. 启动：根据 model_name 手动分发到不同的启动函数
+    // 启动：遍历 executes 列表，手动分发任务
     void Start();
 
-    // 3. 停止：清理所有线程
+    // 停止：优雅关闭所有线程
     void Stop();
 
 private:
     Pipeline() : is_running_(false) {}
     ~Pipeline();
 
-    // 递归日志记录工具
-    void LogJsonParams(const std::string& prefix, const nlohmann::json& j);
+    // 递归解析 JSON 参数并按格式打印日志
+    void LogRecursive(const std::string& prefix, const nlohmann::json& j);
+    void LogArg(const std::string& name, const std::string& value);
 
-    // --- 具体的任务启动逻辑（在这里独立编写每个任务的启动方式） ---
-    void StartHeartbeat(const nlohmann::json& args);
-    void StartComm(const nlohmann::json& args);
-    void StartSystemHealthy(const nlohmann::json& args);
-
-    nlohmann::json full_config_;
+    // --- 各个模块独立的启动函数 (你可以在这里编写具体的业务逻辑) ---
+    void LaunchHeartbeat(const nlohmann::json& args);
+    void LaunchComm(const nlohmann::json& args);
+    void LaunchSystemHealthy(const nlohmann::json& args);
+    void LaunchEdgeMonitor(const nlohmann::json& args);
+    
+    nlohmann::json config_data_;
     std::atomic<bool> is_running_;
-    std::vector<std::thread> worker_threads_;
+    std::vector<std::thread> workers_;
 };
 
 } // namespace pipeline

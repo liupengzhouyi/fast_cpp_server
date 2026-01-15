@@ -22,7 +22,6 @@ namespace init_tools {
         for (const auto& item : args) {
             if (item.at("key") == "--config" || item.at("key") == "-c") {
                 try {
-    
                     std::string configFile = item.at("value");
                     std::cout << "Using config file: " << configFile << std::endl;
                     logInfos.emplace_back("Using config file: " + configFile);
