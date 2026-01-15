@@ -5,7 +5,7 @@ INSTALL_PATH="/usr/local"
 BIN_PATH="${INSTALL_PATH}/bin"
 LIB_PATH="${INSTALL_PATH}/lib/${PROGRAM_NAME}"
 CONFIG_PATH="/etc/${PROGRAM_NAME}"
-LOG_PATH="/var/log/${PROGRAM_NAME}"
+LOG_PATH="/var/${PROGRAM_NAME}/logs"
 TEMP_DIR="/tmp/${PROGRAM_NAME}"
 SERVICE_PATH="/etc/systemd/system"
 
@@ -30,6 +30,12 @@ execute() {
         eval "$@"
     fi
 }
+
+# 停止并禁用已有服务
+echo "🛑 Stopping and disabling existing ${PROGRAM_NAME} service if any..."
+echo "🔧 ${SUPER} systemctl stop ${PROGRAM_NAME}.service 2>/dev/null"
+execute "${SUPER}" systemctl stop "${PROGRAM_NAME}.service" 2>/dev/null
+echo "🔧 ---------------------------------------------------------------"
 
 # Check and create log directory
 echo "📁 Checking log directory at ${LOG_PATH}..."
@@ -79,6 +85,8 @@ fi
 echo "📄 Copying binary file to ${BIN_PATH}..."
 if [ -f "${BIN_PATH}/${PROGRAM_NAME}" ]; then
     echo "⚠️ Binary file: ${BIN_PATH}/${PROGRAM_NAME} already exists. Replacing it..."
+    echo "🔧 ${SUPER} rm -f ${BIN_PATH}/${PROGRAM_NAME}"
+    ${SUPER} rm -f "${BIN_PATH}/${PROGRAM_NAME}"
 fi
 execute "${SUPER}" cp ./bin/${PROGRAM_NAME} "${BIN_PATH}/${PROGRAM_NAME}"
 execute "${SUPER}" chmod 755 "${BIN_PATH}/${PROGRAM_NAME}"
@@ -89,7 +97,7 @@ if [ -d "${TEMP_DIR}" ]; then
     echo "✅ Temp directory already exists."
 else
     echo "📁 Creating temp directory..."
-    execute s"${SUPER}"udo mkdir -p "${TEMP_DIR}"
+    execute "${SUPER}" mkdir -p "${TEMP_DIR}"
 fi
 
 # Copy service file to /etc/systemd/system

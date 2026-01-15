@@ -12,7 +12,7 @@ Group=root
 Type=simple
 
 # 服务启动时执行的命令
-ExecStart=/usr/local/bin/fast_cpp_server
+ExecStart=sudo /usr/local/bin/fast_cpp_server
 
 # 服务崩溃或退出时自动重启
 Restart=always
@@ -28,7 +28,7 @@ WorkingDirectory=/usr/local/bin
 RuntimeDirectory=fast_cpp_server
 
 # 增强权限（防止某些系统限制 root 写入 /var）
-ReadWritePaths=/var/fast_cpp_server /var/log/fast_cpp_server
+ReadWritePaths=/var/fast_cpp_server
 
 [Install]
 # 指定服务的目标，multi-user.target 表示服务将在多用户模式下启动

@@ -30,8 +30,17 @@ namespace free_func {
     {
         std::cout << "[LogConfig] 尝试从INI配置获取日志目录..." << std::endl;
         try {
-            MyINIConfig::GetInstance().GetString("app_name", appName, appName);
-            MyINIConfig::GetInstance().GetString("logger_dir", logDirPath, logDirPath);
+
+            if (MyINIConfig::GetInstance().GetString("app_name", appName, appName)) {
+                logInfos.emplace_back("[LogConfig] 从INI配置获取应用名称成功: " + appName);
+            } else {
+                logInfos.emplace_back("[LogConfig] 从INI配置获取应用名称失败，使用默认值: " + appName);
+            } 
+            if (MyINIConfig::GetInstance().GetString("logger_dir", logDirPath, logDirPath)) {
+                logInfos.emplace_back("[LogConfig] 从INI配置获取日志目录成功: " + logDirPath);
+            } else {
+                logInfos.emplace_back("[LogConfig] 从INI配置获取日志目录失败，使用默认值: " + logDirPath);
+            }
             logFilePath = logDirPath + appName + ".log";
             logInfos.emplace_back("[LogConfig] 从INI配置获取日志目录成功: " + logDirPath);
             logInfos.emplace_back("[LogConfig] 日志文件路径设置为: " + logFilePath);

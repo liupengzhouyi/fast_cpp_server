@@ -93,6 +93,7 @@ int main(int argc, char* argv[]) {
         logDirPath = defaultLogDirPath;
         logFilePath = logDirPath + appName + ".log";
         std::cout << "[LogConfig] 使用默认日志目录: " << logDirPath << std::endl;
+        logInfos.emplace_back("[LogConfig] 使用默认日志目录: " + logDirPath);
     }
     MyLog::Init(logFilePath);  // ✅ 只调用一次
     
@@ -165,15 +166,16 @@ int main(int argc, char* argv[]) {
     // hb.Start();
 
 
-    // bool break_loop = false;
-    // while (true) {
-    //     // 获取推出信号
+    bool break_loop = false;
+    while (true) {
+        // 获取推出信号
         
-    //     if (break_loop) {
-    //         break;
-    //     } 
-    //     sleep(3);
-    // }
+        if (break_loop) {
+            break;
+        } 
+        MYLOG_INFO("Main thread is running... : {}", logFilePath);
+        sleep(3);
+    }
 
 
     // MYLOG_INFO("Test jsoncpp libary.");
