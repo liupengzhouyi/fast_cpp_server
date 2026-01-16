@@ -115,6 +115,9 @@ function(print_colored_message MESSAGE_STRING)
     message("${color_code}${MESSAGE_STRING}${color_reset}")
 endfunction()
 
+message(STATUS ">>> 正在加载第三方依赖...")
+include(cmake/setup_oatpp.cmake)
+
 # 添加protobuf库
 # Protobuf: 明确禁止安装
 set(protobuf_INSTALL OFF CACHE BOOL "Disable protobuf install" FORCE)
@@ -150,8 +153,7 @@ set(CPR_ENABLE_SSL ON CACHE BOOL "" FORCE)
 add_subdirectory(external/cpr EXCLUDE_FROM_ALL)
 # 添加mosquitto库
 set(DOCUMENTATION OFF CACHE BOOL "Disable documentation generation")
-set(WITH_STATIC_LIBRARIES ON CACHE BOOL "" FORCE)
-add_subdirectory(external/mosquitto EXCLUDE_FROM_ALL)
+add_subdirectory(external/mosquitto)
 # 添加libzmq库
 set(WITH_TLS OFF)
 add_subdirectory(external/libzmq EXCLUDE_FROM_ALL)
@@ -212,6 +214,9 @@ add_subdirectory(src/util/my_cache)
 # 添加 my_db 库
 set(BUILD_MY_DB ON CACHE BOOL "Build my_db library")
 add_subdirectory(src/util/my_db)
+# 添加 my_api 库
+set(BUILD_MY_API ON CACHE BOOL "Build my_api library")
+add_subdirectory(src/util/my_api)
 # 添加 my_edge 库
 set(BUILD_MY_EDGE ON CACHE BOOL "Build my_edge library")
 add_subdirectory(src/util/my_edge)
@@ -259,6 +264,8 @@ set(THIRD_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/external/opencv/modules/videoio/include
     ${PROJECT_SOURCE_DIR}/build                                     # OpenCV 编译后的头文件路径
     ${PROJECT_SOURCE_DIR}/build/external/symengine                  # SymEngine 编译后的头文件路径
+    ${PROJECT_SOURCE_DIR}/external/oatpp/src             # oatpp 核心头文件
+    ${PROJECT_SOURCE_DIR}/external/oatpp-swagger/src     # oatpp-swagger 头文件
 )
 
 set(MY_INCLUDE_DIRECTORIES "")
@@ -306,6 +313,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE opencv_photo)
 target_link_libraries(${PROJECT_NAME} PRIVATE opencv_stitching)
 target_link_libraries(${PROJECT_NAME} PRIVATE opencv_video)
 target_link_libraries(${PROJECT_NAME} PRIVATE opencv_videoio)
+target_link_libraries(${PROJECT_NAME} PRIVATE oatpp::oatpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE oatpp::oatpp-swagger)
 
 # 链接 Engine（Eigen 是头文件库，不需要 link）
 # 链接 SymEngine
@@ -332,6 +341,8 @@ add_dependencies(mylib yaml-cpp)
 add_dependencies(mylib cpr::cpr)
 add_dependencies(mylib nlohmann_json::nlohmann_json)
 add_dependencies(mylib symengine)
+# add_dependencies(mylib oatpp::oatpp)
+# add_dependencies(mylib oatpp::oatpp-swagger)
 
 # # 依赖 opencv lib
 # add_dependencies(mylib opencv_calib3d)
@@ -384,7 +395,6 @@ target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE mylib)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_soft_healthy)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE my_system_healthy)
 # 链接 OpenCV 库
-# 链接 OpenCV 库
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_calib3d)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_core)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_dnn)
@@ -400,6 +410,10 @@ target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_photo)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_stitching)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_video)
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE opencv_videoio)
+# target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE oatpp::oatpp)
+# target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE oatpp::oatpp-swagger)
+
+    
 # 链接 SymEngine（Eigen 是头文件库，不需要 link）
 target_link_libraries(${TEST_PROGRAM_NAME} PRIVATE symengine)
 # 包含 Eigen 头文件
@@ -515,29 +529,41 @@ include(CPack)
 set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR};${PROJECT_NAME};ALL;/")
 # 设置安装包的生成格式（如 .tar.gz、.deb、.rpm 等）
 set(CPACK_GENERATOR "TGZ") # 生成 .tar.gz 包； # 其他可选格式：ZIP、DEB、RPM 等
-
 # 设置安装路径
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PROJECT_NAME})
 set(SCRIPT_DIRECTORIES ${PROJECT_SOURCE_DIR}/scripts)
-
+set(SWAGGER_RES_INSTALL_DIR "/usr/share/${PROJECT_NAME}/swagger-res")
+set(SWAGGER_RES_DIR         ${CMAKE_SOURCE_DIR}/external/oatpp-swagger/res)
+# --- 编译时定义宏 ---
+# 使用 CMAKE_INSTALL_PREFIX 配合相对路径，确保在开发阶段和安装后都能找到
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    # 开发阶段，指向源码路径
+    add_definitions(-DOATPP_SWAGGER_RES_PATH="${CMAKE_SOURCE_DIR}/external/oatpp-swagger/res")
+else()
+    # 发布阶段，指向安装后的相对路径 (相对于安装根目录)
+    # 注意：实际运行时可能需要根据可执行文件位置计算绝对路径
+    add_definitions(-DOATPP_SWAGGER_RES_PATH="${CMAKE_INSTALL_PREFIX}/${SWAGGER_RES_INSTALL_DIR}")
+endif()
 
 # 1. 安装主程序
-install(TARGETS     ${PROJECT_NAME}      RUNTIME    DESTINATION bin)
+install(TARGETS     ${PROJECT_NAME}      RUNTIME        DESTINATION bin)
 # 2. (可选) 安装单元测试程序 - 生产环境建议注释掉
-install(TARGETS     ${TEST_PROGRAM_NAME} RUNTIME    DESTINATION bin)
+install(TARGETS     ${TEST_PROGRAM_NAME} RUNTIME        DESTINATION bin)
 # 3. 安装配置目录
-install(DIRECTORY   ${PROJECT_SOURCE_DIR}/config/   DESTINATION config)
-install(DIRECTORY   ${PROJECT_SOURCE_DIR}/service/  DESTINATION service)
-# 4. 安装脚本
-install(FILES       ${SCRIPT_DIRECTORIES}/start.sh DESTINATION .)
-install(FILES       ${SCRIPT_DIRECTORIES}/install.sh DESTINATION .)
-install(FILES       ${SCRIPT_DIRECTORIES}/uninstall.sh DESTINATION .)
-# 5. [关键] 仅安装运行时必须的动态库 (.so)
+install(DIRECTORY   ${PROJECT_SOURCE_DIR}/config/       DESTINATION config)
+install(DIRECTORY   ${PROJECT_SOURCE_DIR}/service/      DESTINATION service)
+# 4. 安装 Swagger 资源文件
+install(DIRECTORY   ${SWAGGER_RES_DIR}                  DESTINATION swagger-res)
+# 5. 安装脚本
+install(FILES       ${SCRIPT_DIRECTORIES}/start.sh      DESTINATION .)
+install(FILES       ${SCRIPT_DIRECTORIES}/install.sh    DESTINATION .)
+install(FILES       ${SCRIPT_DIRECTORIES}/uninstall.sh  DESTINATION .)
+# 6. [关键] 仅安装运行时必须的动态库 (.so)
 # install(DIRECTORY   ${CMAKE_BINARY_DIR}/lib/ DESTINATION lib)
 if(TARGET libzmq)
     install(FILES $<TARGET_FILE:libzmq> DESTINATION lib)
 endif()
 
-if(TARGET libmosquitto)
-    install(FILES $<TARGET_FILE:libmosquitto> DESTINATION lib)
-endif()
+# if(TARGET libmosquitto)
+#     install(FILES $<TARGET_FILE:libmosquitto> DESTINATION lib)
+# endif()

@@ -44,6 +44,7 @@ private:
     void LaunchComm(const nlohmann::json& args);
     void LaunchSystemHealthy(const nlohmann::json& args);
     void LaunchEdgeMonitor(const nlohmann::json& args);
+    void LaunchRestAPI(const nlohmann::json& args);
     
     nlohmann::json config_data_;
     std::atomic<bool> is_running_;

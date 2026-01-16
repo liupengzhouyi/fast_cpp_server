@@ -104,6 +104,12 @@
                     "interval_sec_": 3
                 },
                 "model_name": "edge_monitor"
+            },
+            "4": {
+                "model_args": {
+                    "port": 9999
+                },
+                "model_name": "rest_api"
             }
         }
     }

@@ -2,7 +2,7 @@
 #include "MyHeartbeatManager.h"
 #include "MyEdgeManager.h"
 #include "EdgeDevice.h"
-
+#include "MyAPI.h"
 
 namespace tools {
 namespace pipeline {
@@ -105,6 +105,9 @@ void Pipeline::Start() {
                 } else if (model_name == "edge_monitor") {
                     LaunchEdgeMonitor(model_args);
                     success_count++;
+                } else if (model_name == "rest_api") {
+                    LaunchRestAPI(model_args);
+                    success_count++;
                 } else {
                     MYLOG_INFO("* Arg: {}, Value: {}", "节点[" + node_index + "]警告", "未知的模型名称: " + model_name);
                 }
@@ -173,6 +176,7 @@ void Pipeline::LaunchHeartbeat(const nlohmann::json& args) {
     }
 }
 
+// --- 边缘监控模块启动函数 ---
 void Pipeline::LaunchEdgeMonitor(const nlohmann::json& args) {
     const std::string module_name = "边缘监控模块(EdgeMonitor)";
     MYLOG_INFO("===== 开始启动模块: {} =====", module_name);
@@ -201,6 +205,31 @@ void Pipeline::LaunchEdgeMonitor(const nlohmann::json& args) {
         MYLOG_ERROR("* 模块: {}, 捕获未知严重异常", module_name);
     }
 
+}
+
+// 在 Pipeline.cpp 的模块逻辑实现区添加
+void Pipeline::LaunchRestAPI(const nlohmann::json& args) {
+    const std::string module_name = "REST-API模块";
+    MYLOG_INFO("===== 开始启动模块: {} =====", module_name);
+
+    try {
+        // 1. 提取参数
+        int port = args.value("port", 8000); // 默认 8000 端口
+        
+        // 2. 获取 API 单例并启动
+        // 注意：MyAPI::Start 内部已经启动了 std::thread，
+        // 所以我们不需要再把 MyAPI::Start 丢进 workers_
+        my_api::MyAPI::GetInstance().Start(port);
+
+        // 3. 为了让 Pipeline::Stop 能关闭 API，
+        // 我们可以把 API 的运行状态监测挂载到一个监控线程里（可选）
+        // 或者直接让 Pipeline::Stop 显式调用 MyAPI::Stop
+        
+        MYLOG_INFO("* 模块: {}, 监听端口: {}, 状态: {}", module_name, port, "启动成功");
+
+    } catch (const std::exception& e) {
+        MYLOG_ERROR("* 模块: {}, 捕获异常: {}", module_name, e.what());
+    }
 }
 
 void Pipeline::LaunchComm(const nlohmann::json& args) {
@@ -234,6 +263,8 @@ void Pipeline::LaunchSystemHealthy(const nlohmann::json& args) {
 
 void Pipeline::Stop() {
     is_running_ = false;
+    // 显式停止 API 服务
+    my_api::MyAPI::GetInstance().Stop();
     for (auto& t : workers_) {
         if (t.joinable()) t.join();
     }

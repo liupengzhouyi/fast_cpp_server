@@ -239,6 +239,42 @@ else
   echo "⬇️ Failed to download SymEngine. ❌"
 fi
 
+# # 下载 oatpp 核心库
+# if [ -d "external/oatpp" ]; then
+#   echo "⬇️ Directory 'external/oatpp' already exists. ✅"
+# else
+#   echo "⬇️ Downloading oatpp/oatpp..."
+#   git clone --depth 1 https://github.com/oatpp/oatpp.git external/oatpp
+# fi
+
+# # 下载 oatpp-swagger 扩展模块
+# if [ -d "external/oatpp-swagger" ]; then
+#   echo "⬇️ Directory 'external/oatpp-swagger' already exists. ✅"
+# else
+#   echo "⬇️ Downloading oatpp/oatpp-swagger..."
+#   git clone --depth 1 https://github.com/oatpp/oatpp-swagger.git external/oatpp-swagger
+# fi
+
+# 定义统一的版本号，方便以后升级
+OATPP_VERSION="1.3.1"
+
+# 下载 oatpp 核心库
+if [ -d "external/oatpp" ]; then
+  echo "⬇️ Directory 'external/oatpp' already exists. ✅"
+else
+  echo "⬇️ Downloading oatpp/oatpp version $OATPP_VERSION..."
+  # -b 指定标签，--depth 1 只下载最新提交以节省空间
+  git clone --depth 1 -b $OATPP_VERSION https://github.com/oatpp/oatpp.git external/oatpp
+fi
+
+# 下载 oatpp-swagger 扩展模块
+if [ -d "external/oatpp-swagger" ]; then
+  echo "⬇️ Directory 'external/oatpp-swagger' already exists. ✅"
+else
+  echo "⬇️ Downloading oatpp/oatpp-swagger version $OATPP_VERSION..."
+  git clone --depth 1 -b $OATPP_VERSION https://github.com/oatpp/oatpp-swagger.git external/oatpp-swagger
+fi
+
 # create main.cpp
 if [ -f "src/main.cpp" ]; then
   echo "📄 File 'src/main.cpp' already exists. ✅"

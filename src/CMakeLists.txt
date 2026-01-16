@@ -52,6 +52,10 @@ pretty_print_list("MYLIB_INCLUDE_DIRECTORIES List" MYLIB_INCLUDE_DIRECTORIES)
 target_link_libraries(mylib PUBLIC nlohmann_json::nlohmann_json)
 # protobuf
 target_link_libraries(mylib PUBLIC protobuf::libprotobuf)
+# oatpp
+target_link_libraries(mylib PUBLIC oatpp::oatpp)
+# oatpp-swagger
+target_link_libraries(mylib PUBLIC oatpp::oatpp-swagger)
 # mylog
 target_link_libraries(mylib PUBLIC mylog)
 # myconfig
@@ -70,6 +74,7 @@ target_link_libraries(mylib PUBLIC my_control)
 target_link_libraries(mylib PUBLIC my_network)
 target_link_libraries(mylib PUBLIC my_ai_interface)
 target_link_libraries(mylib PUBLIC my_data)
+target_link_libraries(mylib PUBLIC my_api)
 # myproto
 target_link_libraries(mylib PUBLIC myproto)
 # cpr

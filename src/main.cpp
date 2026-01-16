@@ -18,6 +18,7 @@
 #include "MyJSONConfig.h"
 #include "MyYAMLConfig.h"
 #include "MyHeartbeatManager.h"
+#include "MyAPI.h"
 
 // #include "system_healthy.h"
 #include "MySystemHealthyManager.h"
@@ -31,6 +32,7 @@
 #include "ServiceGuard.h"
 
 using namespace tools;
+using namespace my_api;
 // using namespace MySystemHealthy;
 using json = nlohmann::json;
 
@@ -123,85 +125,30 @@ int main(int argc, char* argv[]) {
     tools::free_func::showMyConfig("JSON");
     tools::free_func::showMyConfig("YAML");
 
-    // pipeline::Pipeline::GetInstance().Init(MyJSONConfig::GetInstance().Raw());
+    // my_api::RunRestServer(8964);
 
-    // 1. 模拟或读取配置文件
-    nlohmann::json config = {
-        {"terminals", {
-            {{"id", 101}, {"ip", "192.168.1.10"}, {"port", 5000}, {"enabled", true}},
-            {{"id", 102}, {"ip", "192.168.1.11"}, {"port", 5001}, {"enabled", true}},
-            {{"id", 103}, {"ip", "192.168.1.12"}, {"port", 5002}, {"enabled", false}} // 不会启动
-        }}
-    };
-
-    // 模拟读取配置文件得到 json 对象
+    // 1. 读取配置文件得到 json 对象
     nlohmann::json pipelineConfig = {};
     MyJSONConfig::GetInstance().Get("pipeline", {}, pipelineConfig);
     MYLOG_INFO("pipeline Config: \n {}", pipelineConfig.dump(2));
     MYLOG_INFO("======================================================================");
-
-
     // 2. 初始化 Pipeline (单例)
     tools::pipeline::Pipeline::GetInstance().Init(pipelineConfig);
-
     // 3. 启动所有使能的连接
     tools::pipeline::Pipeline::GetInstance().Start();
 
     // 主线程保持运行
-    std::cout << "System is running. Press Enter to exit..." << std::endl;
-    std::cin.get();
-
-    // 4. 停止并清理
-    tools::pipeline::Pipeline::GetInstance().Stop();
-
-    // auto& hb = HeartbeatManager::Instance();
-    // nlohmann::json hbConfig = nlohmann::json::object();
-    // try {
-    //     MyJSONConfig::GetInstance().Get("heartbeat", nlohmann::json::object(), hbConfig);
-    //     MYLOG_INFO("获取 heartbeat 配置成功: {}", hbConfig.dump());
-    // } catch (const std::exception& e) {
-    //     MYLOG_ERROR("获取 heartbeat 配置异常: {}", e.what());
-    // }
-    // hb.Init(hbConfig);
-    // hb.Start();
-
-
     bool break_loop = false;
     while (true) {
         // 获取推出信号
-        
-        if (break_loop) {
-            break;
-        } 
+        if (break_loop) { break;} 
         MYLOG_INFO("Main thread is running... : {}", logFilePath);
         sleep(3);
     }
+    // 4. 停止并清理
+    tools::pipeline::Pipeline::GetInstance().Stop();
 
-
-    // MYLOG_INFO("Test jsoncpp libary.");
-    // json data = json::parse(R"({"key": "value"})");
-    // std::string value = data["key"];
-    // data["new_item_01"] = 1;
-    // data["new_item_02"] = std::vector<int>{1, 2, 3, 4};
-    // // std::shared_ptr<std::vector<int>> ptr = std::make_shared<std::vector<int>>({1, 2, 3, 4});
-    // // data["new_item_03"] = ptr;
-
-    // std::string json_str = data.dump();
-    // std::cout << json_str << std::endl;
-
-    // SystemHealthy systemHealthy;
-
-    // if (systemHealthy.checkSystemHealth()) {
-    //     std::cout << "System is healthy." << std::endl;
-    // } else {
-    //     std::cout << "System is not healthy." << std::endl;
-    // }
-
-    // auto report = systemHealthy.getHealthReport();
-    // for (const auto& [key, value] : report) {
-    //     std::cout << key << ": " << value << std::endl;
-    // }
-
+    
     MySystemHealthy::MySystemHealthyManager::GetInstance().Init(5);
 
     // cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/users/octocat"});
@@ -227,41 +174,6 @@ int main(int argc, char* argv[]) {
     int maxTimeoutMs = 3000;
     SimpleTcpClient simpleTcpClient = SimpleTcpClient(ip, port, maxTimeoutMs);
     std::vector<char> outData = {};
-
-    // DeviceOnlineMonitor monitor("8.8.8.8", 53, 3, 3); // Google DNS
-    DeviceOnlineMonitor monitor;
-    if (!monitor.init("8.8.8.8", 53, 3, 3)) {
-        std::cerr << "Failed to initialize monitor\n";
-        return 1;
-    }
-
-    monitor.start();
-
-    for (int i = 0; i < 300; ++i) {
-        MYLOG_INFO("Device online: {}", monitor.isOnline() ? "YES" : "NO");
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-
-
-
-    while (true)
-    {
-        /* code */
-        sleep(10);
-        // if (simpleTcpClient.readData(outData)) {
-        //     for (auto c : outData) {
-        //         std::cout << c;
-        //     }
-        //     std::cout << std::endl;
-        // } else {
-        //     std::cout << "--- ERROR for get data" << std::endl;
-        // }
-    }
-
-
-    // 程序退出前
-    monitor.stop();
-    // hb.Stop();
 
     return 0;
 }
