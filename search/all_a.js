@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['last_5fsnapshot_5f_0',['last_snapshot_',['../classSoftHealthMonitorManager.html#a68686b0467b038807aa1cfe11ea94a3c',1,'SoftHealthMonitorManager']]],
-  ['loadconfig_1',['LoadConfig',['../classMyConfig.html#adeded25a5f5b659b838e6fadf3fe0aae',1,'MyConfig']]],
-  ['logger_2',['logger',['../namespaceMyLog.html#accdc73450b7a41e30a69fca53a8f2232',1,'MyLog']]],
-  ['longopt_3',['longOpt',['../structArgumentParser_1_1Option.html#a2c9b501963b98d0a2614f69d5118671f',1,'ArgumentParser::Option']]]
+  ['killoldprocess_0',['KillOldProcess',['../classtools_1_1service__guard_1_1ServiceGuard.html#ae2065dd32cee137c79dceb9c8aa12dc0',1,'tools::service_guard::ServiceGuard']]],
+  ['kv_5f_1',['kv_',['../classMyINIConfig.html#a421e575af8a12e4b513d2c8a7a5eec59',1,'MyINIConfig']]]
 ];

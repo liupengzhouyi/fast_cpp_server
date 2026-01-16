@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>PROJECT_NAME: src/tools/pipeline/Pipeline.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">PROJECT_NAME<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1563a38af0d3a5e4a6330d6d45e9792a.html">tools</a></li><li class="navelem"><a class="el" href="dir_3380b48cc35f6e09b5182ddb7cf01df3.html">pipeline</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">Pipeline.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="Pipeline_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#ifndef PIPELINE_H</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno"><a class="line" href="Pipeline_8h.html#a4999522db87fb712ded4c26696a8dde8">    3</a></span><span class="preprocessor">#define PIPELINE_H</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;thread&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;atomic&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;nlohmann/json.hpp&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="MyLog_8h.html">MyLog.h</a>&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacetools.html">tools</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span>pipeline {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classtools_1_1pipeline_1_1Pipeline.html">   15</a></span><span class="keyword">class </span><a class="code hl_class" href="classtools_1_1pipeline_1_1Pipeline.html">Pipeline</a> {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00017" data-start="{" data-end="}">
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classtools_1_1pipeline_1_1Pipeline.html#a45d66ac4a4c9b0bdf1bf3c1a4df63dc7">   17</a></span>    <span class="keyword">static</span> <a class="code hl_class" href="classtools_1_1pipeline_1_1Pipeline.html">Pipeline</a>&amp; <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#a45d66ac4a4c9b0bdf1bf3c1a4df63dc7">GetInstance</a>() {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <span class="keyword">static</span> <a class="code hl_class" href="classtools_1_1pipeline_1_1Pipeline.html">Pipeline</a> instance;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keywordflow">return</span> instance;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    }</div>
+</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classtools_1_1pipeline_1_1Pipeline.html#a7bd01b3931764385d1c948b8c8cd048e">   22</a></span>    <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#a7bd01b3931764385d1c948b8c8cd048e">Pipeline</a>(<span class="keyword">const</span> <a class="code hl_class" href="classtools_1_1pipeline_1_1Pipeline.html">Pipeline</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classtools_1_1pipeline_1_1Pipeline.html#af9ba5327e33612eaf937c4dc0fd84f01">   23</a></span>    <a class="code hl_class" href="classtools_1_1pipeline_1_1Pipeline.html">Pipeline</a>&amp; <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#af9ba5327e33612eaf937c4dc0fd84f01">operator=</a>(<span class="keyword">const</span> <a class="code hl_class" href="classtools_1_1pipeline_1_1Pipeline.html">Pipeline</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="comment">// 初始化：读取你提供的具体 JSON 结构并记录日志</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#ac933e753013e97524e4f594875990de6">Init</a>(<span class="keyword">const</span> nlohmann::json&amp; config);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="comment">// 启动：遍历 executes 列表，手动分发任务</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#a07aaf1227e4d645f15e0a964f54ef291">Start</a>();</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="comment">// 停止：优雅关闭所有线程</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#a17a237457e57625296e6b24feb19c60a">Stop</a>();</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classtools_1_1pipeline_1_1Pipeline.html#a2747df48053a4a23c33c46647259f7b6">   35</a></span>    <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#a2747df48053a4a23c33c46647259f7b6">Pipeline</a>() : <a class="code hl_variable" href="classtools_1_1pipeline_1_1Pipeline.html#ac7fb29f0141daeff0fce5cd31bf4c83e">is_running_</a>(false) {}</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#ab308ffdad0654e43a00b3d7d46c81a68">~Pipeline</a>();</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="comment">// 递归解析 JSON 参数并按格式打印日志</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#a4277153c332354e0545e9102f9771bce">LogRecursive</a>(<span class="keyword">const</span> std::string&amp; prefix, <span class="keyword">const</span> nlohmann::json&amp; j);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#ad0112bc6d7fb4529c0469b9013dde1aa">LogArg</a>(<span class="keyword">const</span> std::string&amp; name, <span class="keyword">const</span> std::string&amp; value);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">// --- 各个模块独立的启动函数 (你可以在这里编写具体的业务逻辑) ---</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#afe3d91fd6adf24f8f0ec4c876667f0e3">LaunchHeartbeat</a>(<span class="keyword">const</span> nlohmann::json&amp; args);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#a8983381deeb84bb686b05a8f2296e9f9">LaunchComm</a>(<span class="keyword">const</span> nlohmann::json&amp; args);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#a1222a49df5bd5c7a8935e4c465ee9cbf">LaunchSystemHealthy</a>(<span class="keyword">const</span> nlohmann::json&amp; args);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#ae2998fc95a900a6a10a1f7e39fa2bd03">LaunchEdgeMonitor</a>(<span class="keyword">const</span> nlohmann::json&amp; args);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classtools_1_1pipeline_1_1Pipeline.html#a94c1d1c5924ef14f6226b73cca5d3a99">LaunchRestAPI</a>(<span class="keyword">const</span> nlohmann::json&amp; args);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classtools_1_1pipeline_1_1Pipeline.html#ab5e51e74ebaab2834d9c1385007fd446">   49</a></span>    nlohmann::json <a class="code hl_variable" href="classtools_1_1pipeline_1_1Pipeline.html#ab5e51e74ebaab2834d9c1385007fd446">config_data_</a>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classtools_1_1pipeline_1_1Pipeline.html#ac7fb29f0141daeff0fce5cd31bf4c83e">   50</a></span>    std::atomic&lt;bool&gt; <a class="code hl_variable" href="classtools_1_1pipeline_1_1Pipeline.html#ac7fb29f0141daeff0fce5cd31bf4c83e">is_running_</a>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classtools_1_1pipeline_1_1Pipeline.html#a6933018f22fd80cacc1f94d97a2fc2e5">   51</a></span>    std::vector&lt;std::thread&gt; <a class="code hl_variable" href="classtools_1_1pipeline_1_1Pipeline.html#a6933018f22fd80cacc1f94d97a2fc2e5">workers_</a>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>};</div>
+</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>} <span class="comment">// namespace pipeline</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>} <span class="comment">// namespace tools</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#endif </span><span class="comment">// PIPELINE_H</span></div>
+<div class="ttc" id="aMyLog_8h_html"><div class="ttname"><a href="MyLog_8h.html">MyLog.h</a></div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html">tools::pipeline::Pipeline</a></div><div class="ttdef"><b>Definition</b> Pipeline.h:15</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_a07aaf1227e4d645f15e0a964f54ef291"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#a07aaf1227e4d645f15e0a964f54ef291">tools::pipeline::Pipeline::Start</a></div><div class="ttdeci">void Start()</div><div class="ttdef"><b>Definition</b> Pipeline.cpp:46</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_a1222a49df5bd5c7a8935e4c465ee9cbf"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#a1222a49df5bd5c7a8935e4c465ee9cbf">tools::pipeline::Pipeline::LaunchSystemHealthy</a></div><div class="ttdeci">void LaunchSystemHealthy(const nlohmann::json &amp;args)</div><div class="ttdef"><b>Definition</b> Pipeline.cpp:247</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_a17a237457e57625296e6b24feb19c60a"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#a17a237457e57625296e6b24feb19c60a">tools::pipeline::Pipeline::Stop</a></div><div class="ttdeci">void Stop()</div><div class="ttdef"><b>Definition</b> Pipeline.cpp:264</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_a2747df48053a4a23c33c46647259f7b6"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#a2747df48053a4a23c33c46647259f7b6">tools::pipeline::Pipeline::Pipeline</a></div><div class="ttdeci">Pipeline()</div><div class="ttdef"><b>Definition</b> Pipeline.h:35</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_a4277153c332354e0545e9102f9771bce"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#a4277153c332354e0545e9102f9771bce">tools::pipeline::Pipeline::LogRecursive</a></div><div class="ttdeci">void LogRecursive(const std::string &amp;prefix, const nlohmann::json &amp;j)</div><div class="ttdef"><b>Definition</b> Pipeline.cpp:14</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_a45d66ac4a4c9b0bdf1bf3c1a4df63dc7"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#a45d66ac4a4c9b0bdf1bf3c1a4df63dc7">tools::pipeline::Pipeline::GetInstance</a></div><div class="ttdeci">static Pipeline &amp; GetInstance()</div><div class="ttdef"><b>Definition</b> Pipeline.h:17</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_a6933018f22fd80cacc1f94d97a2fc2e5"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#a6933018f22fd80cacc1f94d97a2fc2e5">tools::pipeline::Pipeline::workers_</a></div><div class="ttdeci">std::vector&lt; std::thread &gt; workers_</div><div class="ttdef"><b>Definition</b> Pipeline.h:51</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_a7bd01b3931764385d1c948b8c8cd048e"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#a7bd01b3931764385d1c948b8c8cd048e">tools::pipeline::Pipeline::Pipeline</a></div><div class="ttdeci">Pipeline(const Pipeline &amp;)=delete</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_a8983381deeb84bb686b05a8f2296e9f9"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#a8983381deeb84bb686b05a8f2296e9f9">tools::pipeline::Pipeline::LaunchComm</a></div><div class="ttdeci">void LaunchComm(const nlohmann::json &amp;args)</div><div class="ttdef"><b>Definition</b> Pipeline.cpp:235</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_a94c1d1c5924ef14f6226b73cca5d3a99"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#a94c1d1c5924ef14f6226b73cca5d3a99">tools::pipeline::Pipeline::LaunchRestAPI</a></div><div class="ttdeci">void LaunchRestAPI(const nlohmann::json &amp;args)</div><div class="ttdef"><b>Definition</b> Pipeline.cpp:211</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_ab308ffdad0654e43a00b3d7d46c81a68"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#ab308ffdad0654e43a00b3d7d46c81a68">tools::pipeline::Pipeline::~Pipeline</a></div><div class="ttdeci">~Pipeline()</div><div class="ttdef"><b>Definition</b> Pipeline.cpp:10</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_ab5e51e74ebaab2834d9c1385007fd446"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#ab5e51e74ebaab2834d9c1385007fd446">tools::pipeline::Pipeline::config_data_</a></div><div class="ttdeci">nlohmann::json config_data_</div><div class="ttdef"><b>Definition</b> Pipeline.h:49</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_ac7fb29f0141daeff0fce5cd31bf4c83e"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#ac7fb29f0141daeff0fce5cd31bf4c83e">tools::pipeline::Pipeline::is_running_</a></div><div class="ttdeci">std::atomic&lt; bool &gt; is_running_</div><div class="ttdef"><b>Definition</b> Pipeline.h:50</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_ac933e753013e97524e4f594875990de6"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#ac933e753013e97524e4f594875990de6">tools::pipeline::Pipeline::Init</a></div><div class="ttdeci">void Init(const nlohmann::json &amp;config)</div><div class="ttdef"><b>Definition</b> Pipeline.cpp:29</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_ad0112bc6d7fb4529c0469b9013dde1aa"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#ad0112bc6d7fb4529c0469b9013dde1aa">tools::pipeline::Pipeline::LogArg</a></div><div class="ttdeci">void LogArg(const std::string &amp;name, const std::string &amp;value)</div><div class="ttdef"><b>Definition</b> Pipeline.cpp:25</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_ae2998fc95a900a6a10a1f7e39fa2bd03"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#ae2998fc95a900a6a10a1f7e39fa2bd03">tools::pipeline::Pipeline::LaunchEdgeMonitor</a></div><div class="ttdeci">void LaunchEdgeMonitor(const nlohmann::json &amp;args)</div><div class="ttdef"><b>Definition</b> Pipeline.cpp:180</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_af9ba5327e33612eaf937c4dc0fd84f01"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#af9ba5327e33612eaf937c4dc0fd84f01">tools::pipeline::Pipeline::operator=</a></div><div class="ttdeci">Pipeline &amp; operator=(const Pipeline &amp;)=delete</div></div>
+<div class="ttc" id="aclasstools_1_1pipeline_1_1Pipeline_html_afe3d91fd6adf24f8f0ec4c876667f0e3"><div class="ttname"><a href="classtools_1_1pipeline_1_1Pipeline.html#afe3d91fd6adf24f8f0ec4c876667f0e3">tools::pipeline::Pipeline::LaunchHeartbeat</a></div><div class="ttdeci">void LaunchHeartbeat(const nlohmann::json &amp;args)</div><div class="ttdef"><b>Definition</b> Pipeline.cpp:150</div></div>
+<div class="ttc" id="anamespacetools_html"><div class="ttname"><a href="namespacetools.html">tools</a></div><div class="ttdef"><b>Definition</b> FreeFunc.cpp:13</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
